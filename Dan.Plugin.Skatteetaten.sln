@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dan.Plugin.DATASOURCENAME.Test", "test\Dan.Plugin.DATASOURCENAME.Test\Dan.Plugin.DATASOURCENAME.Test.csproj", "{B3D46531-F347-4F9E-AD08-6A93E02A7E48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dan.Plugin.Skatteetaten", "src\Dan.Plugin.Skatteetaten\Dan.Plugin.Skatteetaten.csproj", "{EC1D3A58-C881-442C-8C4A-B1D2A2535F6B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dan.Plugin.DATASOURCENAME", "src\Dan.Plugin.DATASOURCENAME\Dan.Plugin.DATASOURCENAME.csproj", "{EC1D3A58-C881-442C-8C4A-B1D2A2535F6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dan.Plugin.Skatteetaten.Test", "test\Dan.Plugin.Skatteetaten.Test\Dan.Plugin.Skatteetaten.Test.csproj", "{6BC4022D-D7C6-42CD-ABD2-C898EB75A239}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B3D46531-F347-4F9E-AD08-6A93E02A7E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3D46531-F347-4F9E-AD08-6A93E02A7E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3D46531-F347-4F9E-AD08-6A93E02A7E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3D46531-F347-4F9E-AD08-6A93E02A7E48}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC1D3A58-C881-442C-8C4A-B1D2A2535F6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EC1D3A58-C881-442C-8C4A-B1D2A2535F6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC1D3A58-C881-442C-8C4A-B1D2A2535F6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC1D3A58-C881-442C-8C4A-B1D2A2535F6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BC4022D-D7C6-42CD-ABD2-C898EB75A239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BC4022D-D7C6-42CD-ABD2-C898EB75A239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BC4022D-D7C6-42CD-ABD2-C898EB75A239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BC4022D-D7C6-42CD-ABD2-C898EB75A239}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
