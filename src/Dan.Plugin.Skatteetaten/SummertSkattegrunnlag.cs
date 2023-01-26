@@ -29,7 +29,7 @@ namespace Dan.Plugin.Skatteetaten
         private ILogger _logger;
         private IEvidenceSourceMetadata _metadata;
 
-        public SummertSkattegrunnlag(IHttpClientFactory factory, IOptions<ApplicationSettings> settings, IEvidenceSourceMetadata evidenceSourceMetadata, LoggerFactory loggerFactory)
+        public SummertSkattegrunnlag(IHttpClientFactory factory, IOptions<ApplicationSettings> settings, IEvidenceSourceMetadata evidenceSourceMetadata, ILoggerFactory loggerFactory)
         {
             _client = factory.CreateClient(DanConstants.SafeHttpClient);
             _settings = settings.Value;

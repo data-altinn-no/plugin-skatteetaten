@@ -27,7 +27,7 @@ namespace Dan.Plugin.Skatteetaten
         private ILogger _logger;
         private IEvidenceSourceMetadata _metadata;
 
-        public PayrollTax(IHttpClientFactory factory, IOptions<ApplicationSettings> settings, LoggerFactory loggerFactory, IEvidenceSourceMetadata evidenceSourceMetadata)
+        public PayrollTax(IHttpClientFactory factory, IOptions<ApplicationSettings> settings, ILoggerFactory loggerFactory, IEvidenceSourceMetadata evidenceSourceMetadata)
         {
             _client = factory.CreateClient(DanConstants.SafeHttpClient);
             _settings = settings.Value;

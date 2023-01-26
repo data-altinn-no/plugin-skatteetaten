@@ -37,7 +37,7 @@ namespace Dan.Plugin.Skatteetaten
 
         private List<KeyValuePair<string, string>> serviceContextRightsPkg = new List<KeyValuePair<string, string>>();
 
-        public Freg(IHttpClientFactory factory, IOptions<ApplicationSettings> settings, LoggerFactory loggerFactory, IEvidenceSourceMetadata evidenceSourceMetadata)
+        public Freg(IHttpClientFactory factory, IOptions<ApplicationSettings> settings, ILoggerFactory loggerFactory, IEvidenceSourceMetadata evidenceSourceMetadata)
         {
             _client = factory.CreateClient(DanConstants.SafeHttpClient);
             _settings = settings.Value;
