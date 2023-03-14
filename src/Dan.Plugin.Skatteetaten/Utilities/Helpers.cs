@@ -37,6 +37,8 @@ namespace Dan.Plugin.Skatteetaten.Utilities
                 throw new EvidenceSourceTransientException(Constants.ERROR_CCR_UPSTREAM_ERROR, message);
             }
 
+
+            //TODO remove
             dynamic poco = JsonConvert.DeserializeObject(content);
 
             return poco;
@@ -46,7 +48,7 @@ namespace Dan.Plugin.Skatteetaten.Utilities
         {
             var result = await Helpers.HarvestFromSke(req, logger, client, HttpMethod.Get, url, settings);
 
-            var item = JsonConvert.DeserializeObject<T>(result);
+            var item = JsonConvert.DeserializeObject<T>(Convert.ToString(result));
 
             return item;
         }
@@ -54,7 +56,7 @@ namespace Dan.Plugin.Skatteetaten.Utilities
         //For dev testing purposes
         private static string GetToken(string audience, X509Certificate2 cert)
         {
-            var mp = new MaskinportenUtil(audience, "skatteetaten:summertskattegrunnlag", "", false, "https://ver2.maskinporten.no/", cert, "https://ver2.maskinporten.no/", null);
+            var mp = new MaskinportenUtil(audience, "folkeregister:deling/offentligmedhjemmel", "", false, "https://ver2.maskinporten.no/", cert, "https://ver2.maskinporten.no/", null);
             return mp.GetToken();
         }
     }

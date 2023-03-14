@@ -6,10 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 
-
 namespace Dan.Plugin.Skatteetaten
 {
-
     class Program
     {
         private static Task Main(string[] args)
@@ -32,7 +30,7 @@ namespace Dan.Plugin.Skatteetaten
                     // This makes IOption<Settings> available in the DI container.
                     services.AddOptions<ApplicationSettings>()
                         .Configure<IConfiguration>((settings, configuration) => configuration.Bind(settings));
-                    var ApplicationSettings = services.BuildServiceProvider().GetRequiredService<IOptions<ApplicationSettings>>().Value;
+                    var applicationSettings = services.BuildServiceProvider().GetRequiredService<IOptions<ApplicationSettings>>().Value;
                 })
                 .Build();
 

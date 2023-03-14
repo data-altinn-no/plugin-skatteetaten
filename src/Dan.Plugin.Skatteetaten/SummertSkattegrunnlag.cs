@@ -75,11 +75,15 @@ namespace Dan.Plugin.Skatteetaten
         private async Task<List<EvidenceValue>> GetSkattegrunnlagOED(EvidenceHarvesterRequest req, string rightsPackage)
         {
             var taxData = await GetSkattegrunnlagFromSKE(req, rightsPackage, "");
+
+            var bruttoformue = taxData.grunnlag.Where(x => x.tekniskNavn == "bruttoformue").FirstOrDefault();
+            var gjeld = taxData.grunnlag.Where(x => x.tekniskNavn == "samletGjeld").FirstOrDefault();
+
             var itemData = new SkattItemResponse()
             {
                 Utkast = false,
-                Bruttoformue = taxData.grunnlag.Where(x => x.tekniskNavn == "bruttoformue").First().beloep,
-                SamletGjeld = taxData.grunnlag.Where(x => x.tekniskNavn == "samletGjeld").First().beloep,
+                Bruttoformue = bruttoformue != null ? bruttoformue.beloep : 0,
+                SamletGjeld = gjeld != null ? gjeld.beloep : 0,
                 Aar = int.Parse(taxData.inntektsaar)
             };
 
