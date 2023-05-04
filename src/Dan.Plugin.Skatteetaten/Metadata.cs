@@ -26,7 +26,7 @@ public class Metadata : IEvidenceSourceMetadata
     private const string ServiceContextDihe = "DigitaleHelgeland";
     private const string ServiceContextReelle = "Reelle rettighetshavere";
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public List<EvidenceCode> GetEvidenceCodes()
@@ -413,7 +413,7 @@ public class Metadata : IEvidenceSourceMetadata
                     Description = "Informasjon fra folkeregisteret",
                     MaxValidDays =  90,
                     RequiredScopes = "folkeregister:deling/offentligmedhjemmel",
-                    BelongsToServiceContexts = new List<string> { ServiceContextDihe, ServiceContextReelle },
+                    BelongsToServiceContexts = new List<string> { ServiceContextDihe, ServiceContextReelle, ServiceContextOed },
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new PartyTypeRequirement()
@@ -429,12 +429,20 @@ public class Metadata : IEvidenceSourceMetadata
                             RequiredScopes = new List<string>() { "altinn:dataaltinnno/dihe" },
                             AppliesToServiceContext = new List<string>() { ServiceContextDihe }
                         },
-                        new ProvideOwnTokenRequirement(),
+                        new ProvideOwnTokenRequirement()
+                        {
+                            AppliesToServiceContext = new List<string>() { ServiceContextDihe, ServiceContextReelle }
+                        },
                         new MaskinportenScopeRequirement()
                         {
                             RequiredScopes = new List<string>() { "altinn:dataaltinnno/reelle" },
                             AppliesToServiceContext = new List<string>() { ServiceContextReelle }
                         },
+                        new MaskinportenScopeRequirement()
+                        {
+                            RequiredScopes = new List<string>() { "altinn:dataaltinnno/oed" },
+                            AppliesToServiceContext = new List<string>() { ServiceContextOed }
+                        }
                     },
                     Values = new List<EvidenceValue>
                     {

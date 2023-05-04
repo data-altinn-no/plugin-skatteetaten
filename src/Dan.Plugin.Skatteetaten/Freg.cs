@@ -47,6 +47,7 @@ namespace Dan.Plugin.Skatteetaten
             //servicecontextname, url
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("DigitaleHelgeland", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Reelle rettighetshavere", $"{ENV}folkeregisteret/api/offentligutenhjemmel/v1/personer/{PERSON}"));
+            serviceContextRightsPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/api/offentligutenhjemmel/v1/personer/{PERSON}"));
         }
 
         private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "")
@@ -72,7 +73,7 @@ namespace Dan.Plugin.Skatteetaten
             var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
 
             var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), evidenceHarvesterRequest.ServiceContext, DihePartPersonRelation);
-                
+
             return await EvidenceSourceResponse.CreateResponse(req, () => GetFregPersonRelasjonUtvidet(evidenceHarvesterRequest, url));
         }
 
