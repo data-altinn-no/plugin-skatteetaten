@@ -23,10 +23,7 @@ namespace Dan.Plugin.Skatteetaten.Utilities
             
             if (!string.IsNullOrEmpty(req.MPToken))   
                 request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + req.MPToken);
-            else if (settings != null && settings.IsDevEnvironment)
-            {
-                request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + GetToken(null, settings.AltinnCertificate));
-            }
+          
             var result = await client.SendAsync(request);
             var content = await result.Content.ReadAsStringAsync();
 
@@ -51,13 +48,6 @@ namespace Dan.Plugin.Skatteetaten.Utilities
             var item = JsonConvert.DeserializeObject<T>(Convert.ToString(result));
 
             return item;
-        }
-
-        //For dev testing purposes
-        private static string GetToken(string audience, X509Certificate2 cert)
-        {
-            var mp = new MaskinportenUtil(audience, "folkeregister:deling/offentligmedhjemmel", "", false, "https://ver2.maskinporten.no/", cert, "https://ver2.maskinporten.no/", null);
-            return mp.GetToken();
         }
     }
 }

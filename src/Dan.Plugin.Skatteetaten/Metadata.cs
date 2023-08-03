@@ -19,12 +19,14 @@ public class Metadata : IEvidenceSourceMetadata
 {
 
     private const string SourceTaxDepartment = "Skatteetaten";
+    private const string PluginSource = "skatt";
     private const string ServiceContextCompliance = "Seriøsitetsinformasjon";
     private const string ServiceContextEbevis = "eBevis";
     private const string ServiceContextTaxiPermit = "Drosjeloyve";
     private const string ServiceContextOed = "OED";
     private const string ServiceContextDihe = "DigitaleHelgeland";
     private const string ServiceContextReelle = "Reelle rettighetshavere";
+    private const string ServiceContextDgm = "DigitalGravferdsmelding";
     /// <summary>
     /// 
     /// </summary>
@@ -333,7 +335,8 @@ public class Metadata : IEvidenceSourceMetadata
                             JsonSchemaDefintion = JsonSchema.FromType<MvaAlminneligNaering>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
-                }, new EvidenceCode()
+                },
+                new EvidenceCode()
                 {
                     EvidenceCodeName = "SummertSkattegrunnlagOED",
                     Description = "Informasjon om formue og gjeld",
@@ -365,7 +368,8 @@ public class Metadata : IEvidenceSourceMetadata
                             JsonSchemaDefintion =  JsonSchema.FromType<SkattItemResponse>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
-                }, new EvidenceCode()
+                },
+                new EvidenceCode()
                 {
                     EvidenceCodeName = "SummertSkattegrunnlag",
                     Description = "Informasjon om formue og gjeld",
@@ -407,13 +411,14 @@ public class Metadata : IEvidenceSourceMetadata
                             Required = false
                         }
                     }
-                }, new EvidenceCode()
+                },
+                new EvidenceCode()
                 {
                     EvidenceCodeName = "FregPerson",
                     Description = "Informasjon fra folkeregisteret",
                     MaxValidDays =  90,
                     RequiredScopes = "folkeregister:deling/offentligmedhjemmel",
-                    BelongsToServiceContexts = new List<string> { ServiceContextDihe, ServiceContextReelle },
+                    BelongsToServiceContexts = new List<string> { ServiceContextDihe, ServiceContextReelle, ServiceContextDgm },
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new PartyTypeRequirement()
@@ -428,6 +433,11 @@ public class Metadata : IEvidenceSourceMetadata
                         {
                             RequiredScopes = new List<string>() { "altinn:dataaltinnno/dihe" },
                             AppliesToServiceContext = new List<string>() { ServiceContextDihe }
+                        },
+                        new MaskinportenScopeRequirement()
+                        {
+                            RequiredScopes = new List<string>() { "altinn:dataaltinnno/dgm" },
+                            AppliesToServiceContext = new List<string>() { ServiceContextDgm }
                         },
                         new ProvideOwnTokenRequirement(),
                         new MaskinportenScopeRequirement()
@@ -444,6 +454,15 @@ public class Metadata : IEvidenceSourceMetadata
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
                             JsonSchemaDefintion =  ""
+                        }
+                    },
+                    Parameters = new List<EvidenceParameter>()
+                    {
+                        new EvidenceParameter()
+                        {
+                            EvidenceParamName = "part",
+                            ParamType = EvidenceParamType.String,
+                            Required = false
                         }
                     }
                 }
@@ -466,9 +485,15 @@ public class Metadata : IEvidenceSourceMetadata
                         },
                         new MaskinportenScopeRequirement()
                         {
+                            AppliesToServiceContext = new List<string>() { ServiceContextDihe },
                             RequiredScopes = new List<string>() { "altinn:dataaltinnno/dihe" }
                         },
-                        new ProvideOwnTokenRequirement()
+                        new ProvideOwnTokenRequirement(),
+                        new MaskinportenScopeRequirement()
+                        {
+                            RequiredScopes = new List<string>() { "altinn:dataaltinnno/dgm" },
+                            AppliesToServiceContext = new List<string>() { ServiceContextDgm }
+                        },
                     },
                     Values = new List<EvidenceValue>
                     {
@@ -478,6 +503,15 @@ public class Metadata : IEvidenceSourceMetadata
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
                             JsonSchemaDefintion =  ""
+                        }
+                    },
+                    Parameters = new List<EvidenceParameter>()
+                    {
+                        new EvidenceParameter()
+                        {
+                            EvidenceParamName = "part",
+                            ParamType = EvidenceParamType.String,
+                            Required = false
                         }
                     }
                 }

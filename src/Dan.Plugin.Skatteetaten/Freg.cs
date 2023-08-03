@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Dan.Common.Extensions;
 using DanConstants = Dan.Common.Constants;
 
 namespace Dan.Plugin.Skatteetaten
@@ -27,8 +28,8 @@ namespace Dan.Plugin.Skatteetaten
 
         private IEvidenceSourceMetadata _metadata;
 
-        private const string DihePartPersonRelation = "relasjon-utvidet";
-        private const string DihePartPersonBasis = "person-basis";
+        private const string PartPersonRelation = "relasjon-utvidet";
+        private const string PartPersonBasis = "person-basis";
 
         private const string ENV = "$$ENV$$";
         private const string PART = "$$PART$$";
@@ -47,6 +48,7 @@ namespace Dan.Plugin.Skatteetaten
             //servicecontextname, url
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("DigitaleHelgeland", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Reelle rettighetshavere", $"{ENV}folkeregisteret/api/offentligutenhjemmel/v1/personer/{PERSON}"));
+            serviceContextRightsPkg.Add(new KeyValuePair<string, string>("DigitalGravferdsmelding", $"{ENV}folkeregisteret/api/offentlig-med-hjemmel/v1/personer/{PERSON}?part={PART}"));
         }
 
         private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "")
@@ -71,7 +73,7 @@ namespace Dan.Plugin.Skatteetaten
         {
             var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
 
-            var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), evidenceHarvesterRequest.ServiceContext, DihePartPersonRelation);
+            var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), evidenceHarvesterRequest.ServiceContext, evidenceHarvesterRequest.TryGetParameter("part", out string partParam) ? partParam : PartPersonRelation);
                 
             return await EvidenceSourceResponse.CreateResponse(req, () => GetFregPersonRelasjonUtvidet(evidenceHarvesterRequest, url));
         }
@@ -81,7 +83,7 @@ namespace Dan.Plugin.Skatteetaten
         {
             var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
 
-            var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), evidenceHarvesterRequest.ServiceContext, "person-basis");
+            var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), evidenceHarvesterRequest.ServiceContext, evidenceHarvesterRequest.TryGetParameter("part", out string partParam) ? partParam : PartPersonBasis);
 
             return await EvidenceSourceResponse.CreateResponse(req, () => GetFregPerson(evidenceHarvesterRequest, url));
         }
