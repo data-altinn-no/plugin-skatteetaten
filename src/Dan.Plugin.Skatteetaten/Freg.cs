@@ -49,6 +49,7 @@ namespace Dan.Plugin.Skatteetaten
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("DigitaleHelgeland", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Reelle rettighetshavere", $"{ENV}folkeregisteret/api/offentligutenhjemmel/v1/personer/{PERSON}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("DigitalGravferdsmelding", $"{ENV}folkeregisteret/api/offentlig-med-hjemmel/v1/personer/{PERSON}?part={PART}"));
+            serviceContextRightsPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}"));
         }
 
         private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "")
