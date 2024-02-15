@@ -1,3 +1,4 @@
+using System;
 using Dan.Common.Exceptions;
 using Dan.Common.Interfaces;
 using Dan.Common.Models;
@@ -33,6 +34,7 @@ namespace Dan.Plugin.Skatteetaten
 
         private const string ENV = "$$ENV$$";
         private const string PART = "$$PART$$";
+        private const string PARTS = "$$PARTS$$";
         private const string PERSON = "$$PERSON$$";
 
 
@@ -52,7 +54,7 @@ namespace Dan.Plugin.Skatteetaten
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}"));
         }
 
-        private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "")
+        private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "", string parts = "")
         {
            var kvp = serviceContextRightsPkg.Where(x => x.Key == serviceContext).First();
 
@@ -65,6 +67,17 @@ namespace Dan.Plugin.Skatteetaten
            var url = kvp.Value.Replace(ENV, _settings.FregEnvironment);
            url = url.Replace(PERSON, ssn);
            url = url.Replace(PART, part);
+
+            if (parts != String.Empty)
+            {
+                var tmp = parts.Split(",").ToList();
+
+                foreach (string partItem in tmp)
+                {
+                    //Part is always set to some value - so we can just append further parts
+                    url += $"&part={partItem.Trim()}";
+                }
+            }
 
             return url;
         }
@@ -84,7 +97,7 @@ namespace Dan.Plugin.Skatteetaten
         {
             var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
 
-            var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), evidenceHarvesterRequest.ServiceContext, evidenceHarvesterRequest.TryGetParameter("part", out string partParam) ? partParam : PartPersonBasis);
+            var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), evidenceHarvesterRequest.ServiceContext, evidenceHarvesterRequest.TryGetParameter("part", out string partParam) ? partParam : PartPersonBasis, evidenceHarvesterRequest.TryGetParameter("parts", out string partsParam) ? partsParam : string.Empty);
 
             return await EvidenceSourceResponse.CreateResponse(req, () => GetFregPerson(evidenceHarvesterRequest, url));
         }

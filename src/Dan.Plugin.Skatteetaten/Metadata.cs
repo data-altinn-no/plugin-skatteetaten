@@ -468,6 +468,12 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceParamName = "part",
                             ParamType = EvidenceParamType.String,
                             Required = false
+                        },
+                        new EvidenceParameter()
+                        {
+                            EvidenceParamName = "parts",
+                            ParamType = EvidenceParamType.String,
+                            Required = false
                         }
                     }
                 }
