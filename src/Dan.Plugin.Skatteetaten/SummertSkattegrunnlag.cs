@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Dan.Plugin.Skatteetaten.Models.Dtos;
 using DanConstants = Dan.Common.Constants;
 
 namespace Dan.Plugin.Skatteetaten
@@ -76,15 +77,15 @@ namespace Dan.Plugin.Skatteetaten
         {
             var taxData = await GetSkattegrunnlagFromSKE(req, rightsPackage, "");
 
-            var bruttoformue = taxData.grunnlag.Where(x => x.tekniskNavn == "bruttoformue").FirstOrDefault();
-            var gjeld = taxData.grunnlag.Where(x => x.tekniskNavn == "samletGjeld").FirstOrDefault();
+            var bruttoformue = taxData.Grunnlag.Where(x => x.TekniskNavn == "bruttoformue").FirstOrDefault();
+            var gjeld = taxData.Grunnlag.Where(x => x.TekniskNavn == "samletGjeld").FirstOrDefault();
 
             var itemData = new SkattItemResponse()
             {
                 Utkast = false,
-                Bruttoformue = bruttoformue != null ? bruttoformue.beloep : 0,
-                SamletGjeld = gjeld != null ? gjeld.beloep : 0,
-                Aar = int.Parse(taxData.inntektsaar)
+                Bruttoformue = bruttoformue != null ? bruttoformue.Beloep : 0,
+                SamletGjeld = gjeld != null ? gjeld.Beloep : 0,
+                Aar = int.Parse(taxData.InntektsAar)
             };
 
             var ecb = new EvidenceBuilder(_metadata, "SummertSkattegrunnlagOED");
@@ -103,21 +104,22 @@ namespace Dan.Plugin.Skatteetaten
             if (string.IsNullOrEmpty(stadieParam.Trim()))
                 stadieParam = "oppgjoer";
 
-            var taxData = await GetSkattegrunnlagFromSKE(req, rightsPackage, stadieParam + "/");           
+            var taxData = await GetSkattegrunnlagFromSKE(req, rightsPackage, stadieParam + "/");
 
             var ecb = new EvidenceBuilder(_metadata, "SummertSkattegrunnlag");
             ecb.AddEvidenceValue($"default", JsonConvert.SerializeObject(taxData), "Skatteetaten", false);
             return ecb.GetEvidenceValues();
         }
 
-        private async Task<SummertSkattegrunnlagModel> GetSkattegrunnlagFromSKE(EvidenceHarvesterRequest evidenceHarvesterRequest, string rightsPackage, string stadie)
+        private async Task<SummertSkattegrunnlagDto> GetSkattegrunnlagFromSKE(EvidenceHarvesterRequest evidenceHarvesterRequest, string rightsPackage, string stadie)
         {
             var urlRecent = $"{_settings.ServiceEndpoint}/api/skatt/tilgjengeligdata/{evidenceHarvesterRequest.OrganizationNumber}/skattegrunnlag";
             var mostRecentData = await Helpers.HarvestFromSke<TilgjengeligData>(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, urlRecent);
 
             var url =
                 $"{_settings.ServiceEndpoint}/api/formueinntekt/summertskattegrunnlag/{stadie}{rightsPackage}/{mostRecentData.sisteTilgjengeligePeriode}/{evidenceHarvesterRequest.OrganizationNumber}";
-            return await Helpers.HarvestFromSke<SummertSkattegrunnlagModel>(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url);
+            var skattegrunnlag = await Helpers.HarvestFromSke<SummertSkattegrunnlagModel>(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url);
+            return new SummertSkattegrunnlagDto(skattegrunnlag);
         }
     }
 }
