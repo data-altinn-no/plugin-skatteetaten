@@ -40,13 +40,15 @@ namespace Dan.Plugin.Skatteetaten
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var evidenceHarvesterRequest = JsonConvert.DeserializeObject<EvidenceHarvesterRequest>(requestBody);
 
-            return await EvidenceSourceResponse.CreateResponse(req, ()=> GetFromSkeAsync(evidenceHarvesterRequest));           
+            return await EvidenceSourceResponse.CreateResponse(req, ()=> GetFromSkeAsync(evidenceHarvesterRequest));
         }
 
 
         private async Task<List<EvidenceValue>> GetFromSkeAsync(EvidenceHarvesterRequest req)
         {
-            var url = $"{_settings.ServiceEndpoint}/api/oppdrag/v1/ebevis/utenlandskevirksomheter/{req.OrganizationNumber}/oppdrag/antall";
+            // yes, the 'utenlandskevirksomheter' path needs to be there despite the baseurl already defining it
+            // https://app.swaggerhub.com/apis/skatteetaten/oppdrag-utenlandske-virksomheter-api/1.1.0
+            var url = $"{_settings.OppdragUtenlandskeVirksomheterEndpoint}/ebevis/utenlandskevirksomheter/{req.OrganizationNumber}/oppdrag/antall";
             dynamic result = await Helpers.HarvestFromSke(req, _logger, _client, HttpMethod.Get, url);
 
             string orgNo = string.Empty;
@@ -114,8 +116,8 @@ namespace Dan.Plugin.Skatteetaten
                     }
                 }
             }
-            
-            return ecb.GetEvidenceValues();            
+
+            return ecb.GetEvidenceValues();
         }
     }
 }

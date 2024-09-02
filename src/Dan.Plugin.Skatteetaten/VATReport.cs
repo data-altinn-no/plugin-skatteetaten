@@ -39,11 +39,11 @@ namespace Dan.Plugin.Skatteetaten
             var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
 
             return await EvidenceSourceResponse.CreateResponse(req, ()=> GetFromSKE(evidenceHarvesterRequest));
-        }    
+        }
 
         private async Task<List<EvidenceValue>> GetFromSKE(EvidenceHarvesterRequest evidenceHarvesterRequest)
         {
-            var url = $"{_settings.ServiceEndpoint}/api/mvamelding/v1/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
+            var url = $"{_settings.MvaMeldingsOpplysningEndpoint}/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
             var result = await Helpers.HarvestFromSke<VATReportModel>(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url);
 
             DateTime delivered = result.levert;

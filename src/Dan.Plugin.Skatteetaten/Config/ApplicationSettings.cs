@@ -40,6 +40,13 @@ namespace Dan.Plugin.Skatteetaten.Config
 
         public string ServiceEndpoint { get; set; }
 
+        public string SummertSkattegrunnlagEndpoint { get; set; }
+        public string SisteTilgjengeligeSkatteoppgjoerEndpoint { get; set; }
+        public string RestanserEndpoint { get; set; }
+        public string OppdragUtenlandskeVirksomheterEndpoint { get; set; }
+        public string ArbeidsgiveravgiftEndpoint { get; set; }
+        public string MvaMeldingsOpplysningEndpoint { get; set; }
+
         public string KeyVaultName { get; set; }
         public string KeyVaultSslCertificate { get; set; }
 

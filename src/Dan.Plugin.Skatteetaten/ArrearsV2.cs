@@ -16,8 +16,8 @@ using DanConstants = Dan.Common.Constants;
 namespace Dan.Plugin.Skatteetaten
 {
     /// <summary>
-    /// This class implements the Azure Function entry points for all the functions implemented by this evidence source. 
-    /// </summary>   
+    /// This class implements the Azure Function entry points for all the functions implemented by this evidence source.
+    /// </summary>
     public class ArrearsV2
     {
         private HttpClient _client;
@@ -42,7 +42,7 @@ namespace Dan.Plugin.Skatteetaten
 
         private async Task<List<EvidenceValue>> GetArrearsFromSkeAsync(EvidenceHarvesterRequest evidenceHarvesterRequest)
         {
-            var url = $"{_settings.ServiceEndpoint}/api/innkreving/restanser/v2/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
+            var url = $"{_settings.RestanserEndpoint}/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
             dynamic result = await Helpers.HarvestFromSke(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url);
 
             string orgNo = "";
@@ -57,7 +57,7 @@ namespace Dan.Plugin.Skatteetaten
             if (result["levert"] != null)
             {
                 delivered = result["levert"];
-            }            
+            }
 
             if (result["forespurteOrganisasjon"] != null)
             {
@@ -72,8 +72,8 @@ namespace Dan.Plugin.Skatteetaten
             if (result["restanser"]["forskuddstrekk"]["forfaltOgUbetalt"] != null)
             {
                 withholdingDueAndUnpaid = result["restanser"]["forskuddstrekk"]["forfaltOgUbetalt"] + " NOK";
-            }  
-            
+            }
+
             if (result["restanser"]["forskuddsskatt"]["forfaltOgUbetalt"] != null)
             {
                 preemptiveTaxUnpaid = result["restanser"]["forskuddsskatt"]["forfaltOgUbetalt"] + " NOK";
