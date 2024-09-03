@@ -47,7 +47,7 @@ namespace Dan.Plugin.Skatteetaten
 
         private async Task<List<EvidenceValue>> GetPayrollTaxFromSkeAsync(EvidenceHarvesterRequest evidenceHarvesterRequest, ILogger logger)
         {
-            var url = $"{_settings.ArbeidsgiveravgiftEndpoint}/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
+            var url = $"{_settings.ArbeidsgiveravgiftEndpoint}/v1/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
             var result = await Helpers.HarvestFromSke(evidenceHarvesterRequest, logger, _client, HttpMethod.Get, url);
 
             var ecb = new EvidenceBuilder(_metadata, "Arbeidsgiveravgift");

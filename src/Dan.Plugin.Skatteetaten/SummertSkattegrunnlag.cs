@@ -113,10 +113,10 @@ namespace Dan.Plugin.Skatteetaten
 
         private async Task<SummertSkattegrunnlagDto> GetSkattegrunnlagFromSKE(EvidenceHarvesterRequest evidenceHarvesterRequest, string rightsPackage, string stadie)
         {
-            var urlRecent = $"{_settings.SisteTilgjengeligeSkatteoppgjoerEndpoint}/{evidenceHarvesterRequest.OrganizationNumber}";
+            var urlRecent = $"{_settings.SisteTilgjengeligeSkatteoppgjoerEndpoint}/v1/{evidenceHarvesterRequest.OrganizationNumber}";
             var mostRecentData = await Helpers.HarvestFromSke<TilgjengeligData>(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, urlRecent, _settings);
 
-            var url = $"{_settings.SummertSkattegrunnlagEndpoint}/{stadie}/{rightsPackage}/{mostRecentData.sisteTilgjengeligePeriode}/{evidenceHarvesterRequest.OrganizationNumber}";
+            var url = $"{_settings.SummertSkattegrunnlagEndpoint}/v2/{stadie}/{rightsPackage}/{mostRecentData.sisteTilgjengeligePeriode}/{evidenceHarvesterRequest.OrganizationNumber}";
             var skattegrunnlag = await Helpers.HarvestFromSke<SummertSkattegrunnlagModel>(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url, _settings);
             return new SummertSkattegrunnlagDto(skattegrunnlag);
         }

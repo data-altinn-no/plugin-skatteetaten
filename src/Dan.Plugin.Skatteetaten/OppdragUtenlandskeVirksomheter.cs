@@ -48,7 +48,7 @@ namespace Dan.Plugin.Skatteetaten
         {
             // yes, the 'utenlandskevirksomheter' path needs to be there despite the baseurl already defining it
             // https://app.swaggerhub.com/apis/skatteetaten/oppdrag-utenlandske-virksomheter-api/1.1.0
-            var url = $"{_settings.OppdragUtenlandskeVirksomheterEndpoint}/ebevis/utenlandskevirksomheter/{req.OrganizationNumber}/oppdrag/antall";
+            var url = $"{_settings.OppdragUtenlandskeVirksomheterEndpoint}/v1/ebevis/utenlandskevirksomheter/{req.OrganizationNumber}/oppdrag/antall";
             dynamic result = await Helpers.HarvestFromSke(req, _logger, _client, HttpMethod.Get, url);
 
             string orgNo = string.Empty;
