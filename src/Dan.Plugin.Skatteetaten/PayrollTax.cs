@@ -42,12 +42,12 @@ namespace Dan.Plugin.Skatteetaten
         {
             var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
 
-            return await EvidenceSourceResponse.CreateResponse(req, ()=> GetPayrollTaxFromSkeAsync(evidenceHarvesterRequest, _logger));          
+            return await EvidenceSourceResponse.CreateResponse(req, ()=> GetPayrollTaxFromSkeAsync(evidenceHarvesterRequest, _logger));
         }
 
         private async Task<List<EvidenceValue>> GetPayrollTaxFromSkeAsync(EvidenceHarvesterRequest evidenceHarvesterRequest, ILogger logger)
         {
-            var url = $"{_settings.ServiceEndpoint}/api/arbeidsgiveravgift/v1/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
+            var url = $"{_settings.ArbeidsgiveravgiftEndpoint}/v1/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
             var result = await Helpers.HarvestFromSke(evidenceHarvesterRequest, logger, _client, HttpMethod.Get, url);
 
             var ecb = new EvidenceBuilder(_metadata, "Arbeidsgiveravgift");
@@ -59,7 +59,7 @@ namespace Dan.Plugin.Skatteetaten
             {
                 logger.LogError("Error parsing 'levert' : " + ex.ToString());
             }
-            
+
             try
             {
                 ecb.AddEvidenceValue($"forespurteOrganisasjon", result.forespurteOrganisasjon);

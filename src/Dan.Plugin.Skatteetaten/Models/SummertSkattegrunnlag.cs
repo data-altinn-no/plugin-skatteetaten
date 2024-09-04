@@ -16,6 +16,6 @@ namespace Dan.Plugin.Skatteetaten.Models
     {
         public string tekniskNavn { get; set; }
         public int beloep { get; set; }
-        public string[] kategori { get; set; }
+        public string kategori { get; set; }
     }
 }
