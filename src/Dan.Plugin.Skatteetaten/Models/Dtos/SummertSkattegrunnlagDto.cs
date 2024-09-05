@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Dan.Plugin.Skatteetaten.Models.Dtos;
 
@@ -17,19 +17,19 @@ public class SummertSkattegrunnlagDto
         Skatteoppgjoersdato = summertSkattegrunnlag.skatteoppgjoersdato;
     }
 
-    [JsonPropertyName("personidentifikator")]
+    [JsonProperty("personidentifikator")]
     public string PersonIdentifikator { get; set; }
 
-    [JsonPropertyName("inntektsaar")]
+    [JsonProperty("inntektsaar")]
     public string InntektsAar { get; set; }
 
-    [JsonPropertyName("skjermet")]
+    [JsonProperty("skjermet")]
     public bool Skjermet { get; set; }
 
-    [JsonPropertyName("grunnlag")]
+    [JsonProperty("grunnlag")]
     public List<GrunnlagDto> Grunnlag { get; set; }
 
-    [JsonPropertyName("skatteoppgjoersdato")]
+    [JsonProperty("skatteoppgjoersdato")]
     public string Skatteoppgjoersdato { get; set; }
 }
 
@@ -43,12 +43,12 @@ public class GrunnlagDto
         Kategori = new[] { grunnlag.kategori };
     }
 
-    [JsonPropertyName("tekniskNavn")]
+    [JsonProperty("tekniskNavn")]
     public string TekniskNavn { get; set; }
 
-    [JsonPropertyName("beloep")]
+    [JsonProperty("beloep")]
     public int Beloep { get; set; }
 
-    [JsonPropertyName("kategori")]
+    [JsonProperty("kategori")]
     public string[] Kategori { get; set; }
 }
