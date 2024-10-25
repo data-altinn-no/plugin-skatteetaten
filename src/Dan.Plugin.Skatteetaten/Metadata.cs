@@ -27,6 +27,7 @@ public class Metadata : IEvidenceSourceMetadata
     private const string ServiceContextDihe = "DigitaleHelgeland";
     private const string ServiceContextReelle = "Reelle rettighetshavere";
     private const string ServiceContextDgm = "DigitalGravferdsmelding";
+    private const string ServiceContextAltinnStudioApps = "Altinn Studio-apps";
     /// <summary>
     ///
     /// </summary>
@@ -418,7 +419,14 @@ public class Metadata : IEvidenceSourceMetadata
                     Description = "Informasjon fra folkeregisteret",
                     MaxValidDays =  90,
                     RequiredScopes = "folkeregister:deling/offentligmedhjemmel",
-                    BelongsToServiceContexts = new List<string> { ServiceContextDihe, ServiceContextReelle, ServiceContextOed, ServiceContextDgm },
+                    BelongsToServiceContexts = new List<string>
+                    {
+                        ServiceContextDihe,
+                        ServiceContextReelle,
+                        ServiceContextOed,
+                        ServiceContextDgm,
+                        ServiceContextAltinnStudioApps
+                    },
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new PartyTypeRequirement()
@@ -449,6 +457,11 @@ public class Metadata : IEvidenceSourceMetadata
                         {
                             RequiredScopes = new List<string>() { "altinn:dataaltinnno/oed" },
                             AppliesToServiceContext = new List<string>() { ServiceContextOed }
+                        },
+                        new MaskinportenScopeRequirement()
+                        {
+                            RequiredScopes = new List<string>() { "dan:altinnstudioapps" },
+                            AppliesToServiceContext = new List<string>() { ServiceContextAltinnStudioApps }
                         }
                     },
                     Values = new List<EvidenceValue>
