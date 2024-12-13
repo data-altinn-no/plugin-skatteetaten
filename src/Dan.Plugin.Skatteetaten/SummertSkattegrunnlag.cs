@@ -98,7 +98,7 @@ namespace Dan.Plugin.Skatteetaten
             string stadieParam = string.Empty;
             try
             {
-                stadieParam = req.GetParameterValue<String>("stadie");
+                req.TryGetParameter("stadie", out stadieParam);
             } catch (Exception) { }
 
             if (string.IsNullOrEmpty(stadieParam.Trim()))
