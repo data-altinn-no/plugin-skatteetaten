@@ -496,7 +496,7 @@ public class Metadata : IEvidenceSourceMetadata
                     Description = "Informasjon fra folkeregisteret",
                     MaxValidDays =  90,
                     RequiredScopes = "folkeregister:deling/offentligmedhjemmel",
-                    BelongsToServiceContexts = new List<string> { ServiceContextDihe },
+                    BelongsToServiceContexts = new List<string> { ServiceContextDihe, ServiceContextDgm, ServiceContextAltinnStudioApps },
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new PartyTypeRequirement()
@@ -517,6 +517,11 @@ public class Metadata : IEvidenceSourceMetadata
                         {
                             RequiredScopes = new List<string>() { "altinn:dataaltinnno/dgm" },
                             AppliesToServiceContext = new List<string>() { ServiceContextDgm }
+                        },
+                        new MaskinportenScopeRequirement()
+                        {
+                            RequiredScopes = new List<string>() { "dan:altinnstudioapps" },
+                            AppliesToServiceContext = new List<string>() { ServiceContextAltinnStudioApps }
                         },
                     },
                     Values = new List<EvidenceValue>
