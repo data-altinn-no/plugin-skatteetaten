@@ -101,7 +101,7 @@ namespace Dan.Plugin.Skatteetaten
                 req.TryGetParameter("stadie", out stadieParam);
             } catch (Exception) { }
 
-            if (string.IsNullOrEmpty(stadieParam.Trim()))
+            if (string.IsNullOrEmpty(stadieParam))
                 stadieParam = "oppgjoer";
 
             var taxData = await GetSkattegrunnlagFromSKE(req, rightsPackage, stadieParam);
