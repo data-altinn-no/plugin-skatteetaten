@@ -52,7 +52,7 @@ namespace Dan.Plugin.Skatteetaten
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Reelle rettighetshavere", $"{ENV}folkeregisteret/api/offentligutenhjemmel/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("DigitalGravferdsmelding", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
-            serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Altinn Studio-apps", $"{ENV}folkeregisteret/api/offentligutenhjemmel/v1/personer/{PERSON}?part={PART}"));
+            serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Altinn Studio-apps", $"{ENV}folkeregisteret/api/offentlig-med-hjemmel/v1/personer/{PERSON}?part={PART}"));
         }
 
         private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "", string parts = "")
