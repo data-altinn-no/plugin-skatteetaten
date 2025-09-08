@@ -543,6 +543,59 @@ public class Metadata : IEvidenceSourceMetadata
                             Required = false
                         }
                     }
+                },
+                new EvidenceCode()
+                {
+                    EvidenceCodeName = "FregPersonUtenHjemmel",
+                    Description = "Informasjon fra folkeregisteret",
+                    MaxValidDays =  90,
+                    RequiredScopes = "folkeregister:deling/offentligutenhjemmel",
+                    BelongsToServiceContexts = new List<string>
+                    {                        
+                        ServiceContextAltinnStudioApps
+                    },
+                    AuthorizationRequirements = new List<Requirement>()
+                    {
+                        new PartyTypeRequirement()
+                        {
+                            AllowedPartyTypes = new AllowedPartyTypesList()
+                            {
+                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
+                                    AccreditationPartyTypes.Subject, PartyTypeConstraint.PrivatePerson)
+                            }
+                        },                      
+                        new ProvideOwnTokenRequirement(),                       
+                        new MaskinportenScopeRequirement()
+                        {
+                            RequiredScopes = new List<string>() { "dan:altinnstudioapps" },
+                            AppliesToServiceContext = new List<string>() { ServiceContextAltinnStudioApps }
+                        }
+                    },
+                    Values = new List<EvidenceValue>
+                    {
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "default",
+                            ValueType = EvidenceValueType.JsonSchema,
+                            Source = SourceTaxDepartment,
+                            JsonSchemaDefintion =  ""
+                        }
+                    },
+                    Parameters = new List<EvidenceParameter>()
+                    {
+                        new EvidenceParameter()
+                        {
+                            EvidenceParamName = "part",
+                            ParamType = EvidenceParamType.String,
+                            Required = false
+                        },
+                        new EvidenceParameter()
+                        {
+                            EvidenceParamName = "parts",
+                            ParamType = EvidenceParamType.String,
+                            Required = false
+                        }
+                    }
                 }
             };
     }

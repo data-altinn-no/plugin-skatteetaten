@@ -37,6 +37,8 @@ namespace Dan.Plugin.Skatteetaten
         private const string PARTS = "$$PARTS$$";
         private const string PERSON = "$$PERSON$$";
 
+        private const string ASA_UH = "Altinn Studio-appsUH";
+
 
         private List<KeyValuePair<string, string>> serviceContextRightsPkg = new List<KeyValuePair<string, string>>();
 
@@ -53,6 +55,7 @@ namespace Dan.Plugin.Skatteetaten
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("DigitalGravferdsmelding", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Altinn Studio-apps", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
+            serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Altinn Studio-appsUH", $"{ENV}folkeregisteret/api/offentligutenhjemmel/v1/personer/{PERSON}?part={PART}"));
         }
 
         private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "", string parts = "")
@@ -99,6 +102,16 @@ namespace Dan.Plugin.Skatteetaten
             var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
 
             var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), evidenceHarvesterRequest.ServiceContext, evidenceHarvesterRequest.TryGetParameter("part", out string partParam) ? partParam : PartPersonBasis, evidenceHarvesterRequest.TryGetParameter("parts", out string partsParam) ? partsParam : string.Empty);
+
+            return await EvidenceSourceResponse.CreateResponse(req, () => GetFregPerson(evidenceHarvesterRequest, url));
+        }
+
+        [Function("FregPersonUtenHjemmel")]
+        public async Task<HttpResponseData> FregPersonUtenHjemmel([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequestData req, FunctionContext context)
+        {
+            var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
+
+            var url = GetUrlForServiceContext(evidenceHarvesterRequest.SubjectParty.GetAsString(false), ASA_UH, evidenceHarvesterRequest.TryGetParameter("part", out string partParam) ? partParam : PartPersonBasis, evidenceHarvesterRequest.TryGetParameter("parts", out string partsParam) ? partsParam : string.Empty);
 
             return await EvidenceSourceResponse.CreateResponse(req, () => GetFregPerson(evidenceHarvesterRequest, url));
         }
