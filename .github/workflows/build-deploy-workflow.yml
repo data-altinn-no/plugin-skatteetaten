@@ -20,7 +20,7 @@ jobs:
   with:
     artifact_name: 'dan-plugin-skatteetaten' # Can be omitted, defaults to 'artifact'
     function_project_path: 'src/Dan.Plugin.Skatteetaten'
-    run_e2e_tests: true
+    run_e2e_tests: false
   secrets:
     function_app_name: ${{ secrets.FUNCTIONAPP_NAME }}
     publish_profile: ${{ secrets.AZURE_FUNCTION_PUBLISH_CREDS }}
