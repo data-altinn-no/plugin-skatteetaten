@@ -343,7 +343,7 @@ public class Metadata : IEvidenceSourceMetadata
                     Description = "Informasjon om formue og gjeld",
                     MaxValidDays =  90,
                     RequiredScopes = "skatteetaten:summertskattegrunnlag",
-                    BelongsToServiceContexts = new List<string> { ServiceContextDihe },
+                    BelongsToServiceContexts = new List<string> { ServiceContextDihe, ServiceContextAltinnStudioApps },
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new PartyTypeRequirement()
