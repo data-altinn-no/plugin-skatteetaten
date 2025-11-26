@@ -38,24 +38,7 @@ namespace Dan.Plugin.Skatteetaten
             _logger = loggerFactory.CreateLogger<SummertSkattegrunnlag>();
 
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("DigitaleHelgeland", "kommuneforeldrebetaling"));
-            serviceContextRightsPkg.Add(new KeyValuePair<string, string>("OED", "husbankenBostoette"));
-        }
-
-        [Function("SummertSkattegrunnlagOED")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, FunctionContext context)
-        {
-            var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
-
-            var rightspackage = serviceContextRightsPkg.Where(v => v.Key == evidenceHarvesterRequest.ServiceContext).FirstOrDefault();
-
-
-            if (string.IsNullOrEmpty(rightspackage.Value))
-            {
-                _logger.LogError($"SummertSkattegrunnlag: rettighetspakke not defined for {evidenceHarvesterRequest.ServiceContext}");
-                throw new EvidenceSourcePermanentServerException(Constants.ERROR_CCR_UPSTREAM_ERROR, "No rights package available for servicecontext");
-            }
-
-            return await EvidenceSourceResponse.CreateResponse(req, () => GetSkattegrunnlagOED(evidenceHarvesterRequest, rightspackage.Value));
+            serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Altinn Studio-apps", "kommuneforeldrebetaling"));
         }
 
         [Function("SummertSkattegrunnlag")]
@@ -71,26 +54,6 @@ namespace Dan.Plugin.Skatteetaten
                 throw new EvidenceSourcePermanentServerException(Constants.ERROR_CCR_UPSTREAM_ERROR, "No rights package available for servicecontext");
             }
             return await EvidenceSourceResponse.CreateResponse(req, () => GetSkattegrunnlag(evidenceHarvesterRequest, rightspackage.Value));
-        }
-
-        private async Task<List<EvidenceValue>> GetSkattegrunnlagOED(EvidenceHarvesterRequest req, string rightsPackage)
-        {
-            var taxData = await GetSkattegrunnlagFromSKE(req, rightsPackage, "oppgjoer");
-
-            var bruttoformue = taxData.Grunnlag.Where(x => x.TekniskNavn == "bruttoformue").FirstOrDefault();
-            var gjeld = taxData.Grunnlag.Where(x => x.TekniskNavn == "samletGjeld").FirstOrDefault();
-
-            var itemData = new SkattItemResponse()
-            {
-                Utkast = false,
-                Bruttoformue = bruttoformue != null ? bruttoformue.Beloep : 0,
-                SamletGjeld = gjeld != null ? gjeld.Beloep : 0,
-                Aar = int.Parse(taxData.InntektsAar)
-            };
-
-            var ecb = new EvidenceBuilder(_metadata, "SummertSkattegrunnlagOED");
-            ecb.AddEvidenceValue($"default", JsonConvert.SerializeObject(itemData), "Skatteetaten", false);
-            return ecb.GetEvidenceValues();
         }
 
         private async Task<List<EvidenceValue>> GetSkattegrunnlag(EvidenceHarvesterRequest req, string rightsPackage)

@@ -339,39 +339,6 @@ public class Metadata : IEvidenceSourceMetadata
                 },
                 new EvidenceCode()
                 {
-                    EvidenceCodeName = "SummertSkattegrunnlagOED",
-                    Description = "Informasjon om formue og gjeld",
-                    MaxValidDays =  90,
-                    RequiredScopes = "skatteetaten:summertskattegrunnlag",
-                    BelongsToServiceContexts = new List<string> { ServiceContextOed },
-                    AuthorizationRequirements = new List<Requirement>()
-                    {
-                        new PartyTypeRequirement()
-                        {
-                            AllowedPartyTypes = new AllowedPartyTypesList()
-                            {
-                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
-                                    AccreditationPartyTypes.Subject, PartyTypeConstraint.PrivatePerson)
-                            }
-                        },
-                        new MaskinportenScopeRequirement()
-                        {
-                            RequiredScopes = new List<string>() { "altinn:dataaltinnno/oed" }
-                        }
-                    },
-                    Values = new List<EvidenceValue>
-                    {
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "default",
-                            ValueType = EvidenceValueType.JsonSchema,
-                            Source = SourceTaxDepartment,
-                            JsonSchemaDefintion =  JsonSchema.FromType<SkattItemResponse>().ToJson(Newtonsoft.Json.Formatting.Indented)
-                        }
-                    }
-                },
-                new EvidenceCode()
-                {
                     EvidenceCodeName = "SummertSkattegrunnlag",
                     Description = "Informasjon om formue og gjeld",
                     MaxValidDays =  90,
@@ -383,13 +350,19 @@ public class Metadata : IEvidenceSourceMetadata
                         {
                             AllowedPartyTypes = new AllowedPartyTypesList()
                             {
-                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
-                                    AccreditationPartyTypes.Subject, PartyTypeConstraint.PrivatePerson)
+                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(AccreditationPartyTypes.Subject, PartyTypeConstraint.PrivatePerson),
+                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(AccreditationPartyTypes.Requestor, PartyTypeConstraint.PublicAgency)
                             }
                         },
                         new MaskinportenScopeRequirement()
                         {
+                            AppliesToServiceContext = { ServiceContextDihe },
                             RequiredScopes = new List<string>() { "altinn:dataaltinnno/dihe" }
+                        },
+                        new MaskinportenScopeRequirement()
+                                                {
+                            AppliesToServiceContext = { ServiceContextAltinnStudioApps },
+                            RequiredScopes = new List<string>() { "dan:altinnstudioapps" }
                         },
                         new ProvideOwnTokenRequirement(),
                     },
