@@ -1,13 +1,14 @@
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using Dan.Common.Enums;
 using Dan.Common.Interfaces;
 using Dan.Common.Models;
+using Dan.Plugin.Skatteetaten;
 using Dan.Plugin.Skatteetaten.Models;
 using Dan.Plugin.Skatteetaten.Models.Arbeidsgiveravgift;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using Constants = Dan.Common.Constants;
 using JsonSchema = NJsonSchema.JsonSchema;
 namespace Dan.Plugin.DATASOURCENAME;
@@ -20,7 +21,7 @@ public class Metadata : IEvidenceSourceMetadata
 
     private const string SourceTaxDepartment = "Skatteetaten";
     private const string PluginSource = "skatt";
-    private const string ServiceContextCompliance = "Seriøsitetsinformasjon";
+    //private const string ServiceContextCompliance = "Seriøsitetsinformasjon";
     private const string ServiceContextEbevis = "eBevis";
     private const string ServiceContextTaxiPermit = "Drosjeloyve";
     private const string ServiceContextOed = "OED";
@@ -43,7 +44,7 @@ public class Metadata : IEvidenceSourceMetadata
                     EvidenceSource = SourceTaxDepartment,
                     MaxValidDays = 90,
                     RequiredScopes = "skatteetaten:oppdragutenlandskevirksomheter",
-                    BelongsToServiceContexts = new List<string> { ServiceContextCompliance, ServiceContextEbevis },
+                    BelongsToServiceContexts = new List<string> { ServiceContextEbevis },                   
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new ConsentRequirement()
@@ -51,16 +52,9 @@ public class Metadata : IEvidenceSourceMetadata
                             ServiceCode = "5616",
                             ServiceEdition = 2,
                             ConsentPeriodInDays = 90,
-                            RequiresSrr = true
-                        },
-                        new PartyTypeRequirement()
-                        {
-                            AppliesToServiceContext = new List<string> { ServiceContextCompliance },
-                            AllowedPartyTypes = new AllowedPartyTypesList()
-                            {
-                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
-                                    AccreditationPartyTypes.Requestor, PartyTypeConstraint.PrivateEnterprise)
-                            }
+                            RequiresSrr = true,
+                            AltinnResource = "digdir-oppdragutenlandskevirksomheter-skatteetaten",
+                            Scope = "skatteetaten:oppdragutenlandskevirksomheter"
                         },
                         new PartyTypeRequirement()
                         {
@@ -124,7 +118,7 @@ public class Metadata : IEvidenceSourceMetadata
                     Description = "Return the arrears for the subject company - new format",
                     MaxValidDays =  90,
                     RequiredScopes = "skatteetaten:restanser",
-                    BelongsToServiceContexts = new List<string> { ServiceContextCompliance, ServiceContextEbevis, ServiceContextTaxiPermit },
+                    BelongsToServiceContexts = new List<string> { ServiceContextEbevis, ServiceContextTaxiPermit },
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new ConsentRequirement()
@@ -132,16 +126,9 @@ public class Metadata : IEvidenceSourceMetadata
                             ServiceCode = "5616",
                             ServiceEdition = 5,
                             ConsentPeriodInDays = 90,
-                            RequiresSrr = true
-                        },
-                        new PartyTypeRequirement()
-                        {
-                            AppliesToServiceContext = new List<string> { ServiceContextCompliance },
-                            AllowedPartyTypes = new AllowedPartyTypesList()
-                            {
-                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
-                                    AccreditationPartyTypes.Requestor, PartyTypeConstraint.PrivateEnterprise)
-                            }
+                            RequiresSrr = true,
+                            AltinnResource = "digdir-restanser-skatteetaten",
+                            Scope = "skatteetaten:restanser"
                         },
                         new PartyTypeRequirement()
                         {
@@ -208,14 +195,14 @@ public class Metadata : IEvidenceSourceMetadata
                             Source = SourceTaxDepartment
                         }
                     }
-                },
+                },      
                 new EvidenceCode()
                 {
                     EvidenceCodeName = "Arbeidsgiveravgift",
                     Description = "Return the payroll taxes for the subject company",
                     MaxValidDays =  90,
-                    RequiredScopes = "skatteetaten:arbeidsgiveravgift",
-                    BelongsToServiceContexts = new List<string> { ServiceContextCompliance, ServiceContextEbevis },
+                    //RequiredScopes = "skatteetaten:arbeidsgiveravgift",
+                    BelongsToServiceContexts = new List<string> { ServiceContextEbevis },
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new ConsentRequirement()
@@ -223,16 +210,9 @@ public class Metadata : IEvidenceSourceMetadata
                             ServiceCode = "5616",
                             ServiceEdition = 3,
                             ConsentPeriodInDays = 90,
-                            RequiresSrr = true
-                        },
-                        new PartyTypeRequirement()
-                        {
-                            AppliesToServiceContext = new List<string> { ServiceContextCompliance },
-                            AllowedPartyTypes = new AllowedPartyTypesList()
-                            {
-                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
-                                    AccreditationPartyTypes.Requestor, PartyTypeConstraint.PrivateEnterprise)
-                            }
+                            RequiresSrr = true,
+                            AltinnResource = "digdir-arbeidsgiveravgift-skatteetaten",
+                            Scope = "skatteetaten:arbeidsgiveravgift"
                         },
                         new PartyTypeRequirement()
                         {
@@ -278,8 +258,8 @@ public class Metadata : IEvidenceSourceMetadata
                     EvidenceCodeName = "MvaMeldingsOpplysning",
                     Description = "Return information about VAT reports submitted from the subject company",
                     MaxValidDays =  90,
-                    RequiredScopes = "skatteetaten:mvameldingsopplysning",
-                    BelongsToServiceContexts = new List<string> { ServiceContextCompliance, ServiceContextEbevis },
+                    //RequiredScopes = "skatteetaten:mvameldingsopplysning",
+                    BelongsToServiceContexts = new List<string> { ServiceContextEbevis },
                     AuthorizationRequirements = new List<Requirement>()
                     {
                         new ConsentRequirement()
@@ -287,16 +267,9 @@ public class Metadata : IEvidenceSourceMetadata
                             ServiceCode = "5616",
                             ServiceEdition = 4,
                             ConsentPeriodInDays = 90,
-                            RequiresSrr = true
-                        },
-                        new PartyTypeRequirement()
-                        {
-                            AppliesToServiceContext = new List<string> { ServiceContextCompliance },
-                            AllowedPartyTypes = new AllowedPartyTypesList()
-                            {
-                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
-                                    AccreditationPartyTypes.Requestor, PartyTypeConstraint.PrivateEnterprise)
-                            }
+                            RequiresSrr = true,
+                            Scope = "skatteetaten:mvameldingsopplysning",
+                            AltinnResource = "digdir-mvameldingsopplysning-skatteetaten"
                         },
                         new PartyTypeRequirement()
                         {
@@ -569,7 +542,90 @@ public class Metadata : IEvidenceSourceMetadata
                             Required = false
                         }
                     }
-                }
+                }, new EvidenceCode()
+                {
+                    EvidenceCodeName = "A3Test",
+                    Description = "Return the arrears for the subject company - new format",
+                    MaxValidDays =  90,
+                    //RequiredScopes = "skatteetaten:restanser",
+                    BelongsToServiceContexts = new List<string> { ServiceContextEbevis, ServiceContextTaxiPermit },
+                    AuthorizationRequirements = new List<Requirement>()
+                    {
+                        new ConsentRequirement()
+                        {
+                            ServiceCode = "5616",
+                            ServiceEdition = 5,
+                            ConsentPeriodInDays = 90,
+                            RequiresSrr = true,
+                            
+                            
+                        },                       
+                        new PartyTypeRequirement()
+                        {
+                            AppliesToServiceContext = new List<string> { ServiceContextEbevis, ServiceContextTaxiPermit },
+                            AllowedPartyTypes = new AllowedPartyTypesList()
+                            {
+                                new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
+                                    AccreditationPartyTypes.Requestor, PartyTypeConstraint.PublicAgency)
+                            }
+                        }
+                    },
+                    Values = new List<EvidenceValue>
+                    {
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "levert",
+                            ValueType = EvidenceValueType.DateTime,
+                            Source = SourceTaxDepartment
+                        },
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "forespurteOrganisasjon",
+                            ValueType = EvidenceValueType.String,
+                            Source = SourceTaxDepartment
+                        },
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "arbeidsgiveravgiftForfaltOgUbetalt",
+                            ValueType = EvidenceValueType.Amount,
+                            Source = SourceTaxDepartment
+                        },
+
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "forskuddstrekkForfaltOgUbetalt",
+                            ValueType = EvidenceValueType.Amount,
+                            Source = SourceTaxDepartment
+                        },
+
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "forskuddsskattForfaltOgUbetalt",
+                            ValueType = EvidenceValueType.Amount,
+                            Source = SourceTaxDepartment
+                        },
+
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "restskattForfaltOgUbetalt",
+                            ValueType = EvidenceValueType.Amount,
+                            Source = SourceTaxDepartment
+                        },
+
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "gebyrForfaltOgUbetalt",
+                            ValueType = EvidenceValueType.Amount,
+                            Source = SourceTaxDepartment
+                        },
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "merverdiavgiftForfaltOgUbetalt",
+                            ValueType = EvidenceValueType.Amount,
+                            Source = SourceTaxDepartment
+                        }
+                    }
+                },
             };
     }
 

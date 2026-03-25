@@ -17,9 +17,9 @@ namespace Dan.Plugin.Skatteetaten.Utilities
         {
             logger.LogInformation($"Plugin-skatteetaten: Initiation HarvestFromSke for {req.EvidenceCodeName}:{req.OrganizationNumber} : ");
             var request = new HttpRequestMessage(method, url);
-
+            //new consent validation at skatteetaten only requires the consent jw
             if (!string.IsNullOrEmpty(req.JWT))
-                request.Headers.TryAddWithoutValidation("AltinnSamtykke", req.JWT);           
+                request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + req.JWT);           
             
             if (!string.IsNullOrEmpty(req.MPToken))   
                 request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + req.MPToken);
