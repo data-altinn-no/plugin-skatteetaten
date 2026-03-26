@@ -7,6 +7,11 @@ on:
      - '**/README.md'
      - '**/*.yml'
  workflow_dispatch:
+  inputs:
+   commit_sha:
+     description: 'Optional commit SHA to checkout (for re-runs)'
+     required: false
+     default: ''
 
 permissions:
   actions: read
