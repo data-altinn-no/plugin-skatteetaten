@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Dan.Plugin.Skatteetaten.Config;
 using Constants = Dan.Plugin.Skatteetaten.Models.Constants;
@@ -15,8 +14,15 @@ namespace Dan.Plugin.Skatteetaten.Utilities
     {
         public static async Task<dynamic> HarvestFromSke(EvidenceHarvesterRequest req, ILogger logger, HttpClient client, HttpMethod method, string url, ApplicationSettings settings = null)
         {
-            logger.LogInformation($"Plugin-skatteetaten: Initiation HarvestFromSke for {req.EvidenceCodeName}:{req.OrganizationNumber} : ");
-            var request = new HttpRequestMessage(method, url);
+            if (settings?.IsDevEnvironment == true)
+            {
+                logger.LogInformation($"Plugin-skatteetaten: HarvestFromSke for {req.EvidenceCodeName}:{req.OrganizationNumber} with jwk: {req.JWT} and MPToken: {req.MPToken}");
+            } else 
+                logger.LogInformation($"Plugin-skatteetaten: Initiation HarvestFromSke for {req.EvidenceCodeName}:{req.OrganizationNumber}");
+
+
+
+            using var request = new HttpRequestMessage(method, url);
             //new consent validation at skatteetaten only requires the consent jw
             if (!string.IsNullOrEmpty(req.JWT))
                 request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + req.JWT);           
@@ -24,7 +30,7 @@ namespace Dan.Plugin.Skatteetaten.Utilities
             if (!string.IsNullOrEmpty(req.MPToken))   
                 request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + req.MPToken);
           
-            var result = await client.SendAsync(request);
+            using var result = await client.SendAsync(request);
             var content = await result.Content.ReadAsStringAsync();
 
             if (string.IsNullOrEmpty(content) || !result.IsSuccessStatusCode)
@@ -43,7 +49,7 @@ namespace Dan.Plugin.Skatteetaten.Utilities
 
         public static async Task<T> HarvestFromSke<T>(EvidenceHarvesterRequest req, ILogger logger, HttpClient client, HttpMethod method, string url, ApplicationSettings settings = null) where T : new()
         {
-            var result = await Helpers.HarvestFromSke(req, logger, client, HttpMethod.Get, url, settings);
+            var result = await Helpers.HarvestFromSke(req, logger, client, method, url, settings);
 
             var item = JsonConvert.DeserializeObject<T>(Convert.ToString(result));
 

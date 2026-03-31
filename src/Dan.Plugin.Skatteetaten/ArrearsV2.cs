@@ -43,7 +43,7 @@ namespace Dan.Plugin.Skatteetaten
         private async Task<List<EvidenceValue>> GetArrearsFromSkeAsync(EvidenceHarvesterRequest evidenceHarvesterRequest)
         {
             var url = $"{_settings.RestanserEndpoint}/v2/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
-            dynamic result = await Helpers.HarvestFromSke(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url);
+            dynamic result = await Helpers.HarvestFromSke(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url, _settings);
 
             string orgNo = "";
             DateTime? delivered = null;
