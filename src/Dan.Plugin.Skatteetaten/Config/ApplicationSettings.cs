@@ -56,7 +56,7 @@ namespace Dan.Plugin.Skatteetaten.Config
         {
             get
             {
-                return _altinnCertificate ?? new PluginKeyVault(ApplicationConfig.KeyVaultName).GetCertificate(ApplicationConfig.KeyVaultSslCertificate).Result;
+                return _altinnCertificate ??= new PluginKeyVault(ApplicationConfig.KeyVaultName).GetCertificate(ApplicationConfig.KeyVaultSslCertificate).Result;
             }
             set
             {
