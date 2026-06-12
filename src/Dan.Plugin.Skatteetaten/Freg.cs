@@ -42,6 +42,9 @@ namespace Dan.Plugin.Skatteetaten
 
         private List<KeyValuePair<string, string>> serviceContextRightsPkg = new List<KeyValuePair<string, string>>();
 
+        //servicecontextname, feed url - the hendelsesliste feed is not tied to a single person, so it has its own mapping
+        private List<KeyValuePair<string, string>> serviceContextFeedPkg = new List<KeyValuePair<string, string>>();
+
         public Freg(IHttpClientFactory factory, IOptions<ApplicationSettings> settings, ILoggerFactory loggerFactory, IEvidenceSourceMetadata evidenceSourceMetadata)
         {
             _client = factory.CreateClient(DanConstants.SafeHttpClient);
@@ -56,6 +59,10 @@ namespace Dan.Plugin.Skatteetaten
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Altinn Studio-apps", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/personer/{PERSON}?part={PART}"));
             serviceContextRightsPkg.Add(new KeyValuePair<string, string>("Altinn Studio-appsUH", $"{ENV}folkeregisteret/api/offentligutenhjemmel/v1/personer/{PERSON}?part={PART}"));
+
+            //servicecontextname, url for the hendelsesliste feed (/v1/hendelser/feed)
+            serviceContextFeedPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/hendelser/feed/"));
+            serviceContextFeedPkg.Add(new KeyValuePair<string, string>("Altinn Studio-apps", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/hendelser/feed/"));
         }
 
         private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "", string parts = "")
@@ -82,6 +89,30 @@ namespace Dan.Plugin.Skatteetaten
                     url += $"&part={partItem.Trim()}";
                 }
             }
+
+            return url;
+        }
+
+        private string GetFeedUrlForServiceContext(string serviceContext, string sekvensnummer)
+        {
+            var kvp = serviceContextFeedPkg.Where(x => x.Key == serviceContext).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(kvp.Value))
+            {
+                _logger.LogError($"FregHendelsesliste: feed not defined for {serviceContext}");
+                throw new EvidenceSourcePermanentServerException(Constants.ERROR_CCR_UPSTREAM_ERROR, "No feed endpoint available for servicecontext");
+            }
+
+            if (string.IsNullOrEmpty(sekvensnummer))
+            {
+                _logger.LogError("FregHendelsesliste: sekvensnummer not supplied");
+                throw new EvidenceSourcePermanentClientException(Constants.ERROR_CCR_UPSTREAM_ERROR, "Required parameter 'sekvensnummer' is missing");
+            }
+
+            var url = kvp.Value.Replace(ENV, _settings.FregEnvironment);
+
+            //the feed is paginated by sekvensnummer - the consumer keeps an internal pointer and passes it back as the start of the next page
+            url += $"?seq={sekvensnummer}";
 
             return url;
         }
@@ -116,6 +147,16 @@ namespace Dan.Plugin.Skatteetaten
             return await EvidenceSourceResponse.CreateResponse(req, () => GetFregPerson(evidenceHarvesterRequest, url));
         }
 
+        [Function("FregHendelsesliste")]
+        public async Task<HttpResponseData> FregHendelsesliste([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequestData req, FunctionContext context)
+        {
+            var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
+
+            var url = GetFeedUrlForServiceContext(evidenceHarvesterRequest.ServiceContext, evidenceHarvesterRequest.TryGetParameter("sekvensnummer", out string sekvensnummerParam) ? sekvensnummerParam : string.Empty);
+
+            return await EvidenceSourceResponse.CreateResponse(req, () => GetFregHendelsesliste(evidenceHarvesterRequest, url));
+        }
+
         private async Task<List<EvidenceValue>> GetFregPerson(EvidenceHarvesterRequest req, string url)
         {
             //req.MPToken = req.MPToken ?? GetToken(req.ServiceContext);
@@ -135,6 +176,16 @@ namespace Dan.Plugin.Skatteetaten
             var result = await Helpers.HarvestFromSke(req, _logger, _client, HttpMethod.Get, url);
 
             var ecb = new EvidenceBuilder(_metadata, "FregPersonRelasjonUtvidet");
+            ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result), "Skatteetaten", false);
+
+            return ecb.GetEvidenceValues();
+        }
+
+        private async Task<List<EvidenceValue>> GetFregHendelsesliste(EvidenceHarvesterRequest req, string url)
+        {
+            var result = await Helpers.HarvestFromSke<List<FregHendelseslisteElement>>(req, _logger, _client, HttpMethod.Get, url);
+
+            var ecb = new EvidenceBuilder(_metadata, "FregHendelsesliste");
             ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result), "Skatteetaten", false);
 
             return ecb.GetEvidenceValues();

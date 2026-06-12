@@ -542,7 +542,44 @@ public class Metadata : IEvidenceSourceMetadata
                             Required = false
                         }
                     }
-                }, new EvidenceCode()
+                },
+                new EvidenceCode()
+                {
+                    EvidenceCodeName = "FregHendelsesliste",
+                    Description = "Hendelsesliste (feed) fra folkeregisteret",
+                    MaxValidDays =  90,
+                    RequiredScopes = "folkeregister:deling/offentligmedhjemmel",
+                    BelongsToServiceContexts = new List<string>
+                    {
+                        ServiceContextOed,
+                        ServiceContextAltinnStudioApps
+                    },
+                    AuthorizationRequirements = new List<Requirement>()
+                    {
+                        new ProvideOwnTokenRequirement()
+                       
+                    },
+                    Values = new List<EvidenceValue>
+                    {
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "default",
+                            ValueType = EvidenceValueType.JsonSchema,
+                            Source = SourceTaxDepartment,
+                            JsonSchemaDefintion = JsonSchema.FromType<List<FregHendelseslisteElement>>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                        }
+                    },
+                    Parameters = new List<EvidenceParameter>()
+                    {
+                        new EvidenceParameter()
+                        {
+                            EvidenceParamName = "sekvensnummer",
+                            ParamType = EvidenceParamType.String,
+                            Required = true
+                        }
+                    }
+                },
+                new EvidenceCode()
                 {
                     EvidenceCodeName = "A3Test",
                     Description = "Return the arrears for the subject company - new format",
