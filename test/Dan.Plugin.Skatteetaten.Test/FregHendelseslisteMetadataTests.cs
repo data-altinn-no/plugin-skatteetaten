@@ -25,8 +25,18 @@ namespace Dan.Plugin.Skatteetaten.Test
         {
             var ec = GetFregHendelsesliste();
 
-            ec.AuthorizationRequirements.Should().ContainSingle()
-                .Which.Should().BeOfType<ProvideOwnTokenRequirement>();
+            ec.AuthorizationRequirements.Should().ContainSingle(r => r is ProvideOwnTokenRequirement);
+        }
+
+        [Fact]
+        public void Allows_any_subject()
+        {
+            var ec = GetFregHendelsesliste();
+
+            var subjectRequirement = ec.AuthorizationRequirements
+                .OfType<CustomSubjectRequirement>()
+                .Should().ContainSingle().Subject;
+            subjectRequirement.SubjectRegex.Should().Be(".*");
         }
 
         [Fact]
