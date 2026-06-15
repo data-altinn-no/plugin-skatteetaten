@@ -556,8 +556,13 @@ public class Metadata : IEvidenceSourceMetadata
                     },
                     AuthorizationRequirements = new List<Requirement>()
                     {
-                        new ProvideOwnTokenRequirement()
-                       
+                        new ProvideOwnTokenRequirement(),
+                        new CustomSubjectRequirement()
+                        {
+                            // Allow any string value as subject
+                            SubjectRegex = ".*",
+                            SubjectRegexDescription = "Any string value is allowed"
+                        }
                     },
                     Values = new List<EvidenceValue>
                     {
