@@ -609,9 +609,9 @@ public class Metadata : IEvidenceSourceMetadata
                     {
                         new EvidenceValue()
                         {
-                            EvidenceValueName = "default",
+                            EvidenceValueName = "sekvensnummer",
                             ValueType = EvidenceValueType.Number,
-                            Source = SourceTaxDepartment
+                            Source = SourceTaxDepartment  
                         }
                     }     
                 },

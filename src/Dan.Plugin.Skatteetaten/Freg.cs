@@ -228,7 +228,7 @@ namespace Dan.Plugin.Skatteetaten
             var result = await Helpers.HarvestFromSke<long>(req, _logger, _client, HttpMethod.Get, url);
 
             var ecb = new EvidenceBuilder(_metadata, "FregSisteSekvensnummer");
-            ecb.AddEvidenceValue("default", result);
+            ecb.AddEvidenceValue("sekvensnummer", result);
 
             return ecb.GetEvidenceValues();
         }
