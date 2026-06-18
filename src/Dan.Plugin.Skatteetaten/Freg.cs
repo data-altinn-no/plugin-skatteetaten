@@ -45,6 +45,9 @@ namespace Dan.Plugin.Skatteetaten
         //servicecontextname, feed url - the hendelsesliste feed is not tied to a single person, so it has its own mapping
         private List<KeyValuePair<string, string>> serviceContextFeedPkg = new List<KeyValuePair<string, string>>();
 
+        //servicecontextname, siste sekvensnummer url - exposes the most recently persisted sekvensnummer in the feed
+        private List<KeyValuePair<string, string>> serviceContextSisteSekvensnummerPkg = new List<KeyValuePair<string, string>>();
+
         public Freg(IHttpClientFactory factory, IOptions<ApplicationSettings> settings, ILoggerFactory loggerFactory, IEvidenceSourceMetadata evidenceSourceMetadata)
         {
             _client = factory.CreateClient(DanConstants.SafeHttpClient);
@@ -63,6 +66,10 @@ namespace Dan.Plugin.Skatteetaten
             //servicecontextname, url for the hendelsesliste feed (/v1/hendelser/feed)
             serviceContextFeedPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/hendelser/feed/"));
             serviceContextFeedPkg.Add(new KeyValuePair<string, string>("Altinn Studio-apps", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/hendelser/feed/"));
+
+            //servicecontextname, url for the siste sekvensnummer endpoint (/v1/hendelser/siste/sekvensnummer)
+            serviceContextSisteSekvensnummerPkg.Add(new KeyValuePair<string, string>("OED", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/hendelser/siste/sekvensnummer"));
+            serviceContextSisteSekvensnummerPkg.Add(new KeyValuePair<string, string>("Altinn Studio-apps", $"{ENV}folkeregisteret/offentlig-med-hjemmel/api/v1/hendelser/siste/sekvensnummer"));
         }
 
         private string GetUrlForServiceContext(string ssn, string serviceContext, string part = "", string parts = "")
@@ -117,6 +124,20 @@ namespace Dan.Plugin.Skatteetaten
             return url;
         }
 
+        private string GetSisteSekvensnummerUrlForServiceContext(string serviceContext)
+        {
+            var kvp = serviceContextSisteSekvensnummerPkg.Where(x => x.Key == serviceContext).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(kvp.Value))
+            {
+                _logger.LogError($"FregSisteSekvensnummer: endpoint not defined for {serviceContext}");
+                throw new EvidenceSourcePermanentServerException(Constants.ERROR_CCR_UPSTREAM_ERROR, "No siste sekvensnummer endpoint available for servicecontext");
+            }
+
+            //the endpoint takes no query parameters - it returns the most recently persisted sekvensnummer in the feed
+            return kvp.Value.Replace(ENV, _settings.FregEnvironment);
+        }
+
         [Function("FregPersonRelasjonUtvidet")]
         public async Task<HttpResponseData> FregPersonRelasjonUtvidet([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequestData req, FunctionContext context)
         {
@@ -157,6 +178,16 @@ namespace Dan.Plugin.Skatteetaten
             return await EvidenceSourceResponse.CreateResponse(req, () => GetFregHendelsesliste(evidenceHarvesterRequest, url));
         }
 
+        [Function("FregSisteSekvensnummer")]
+        public async Task<HttpResponseData> FregSisteSekvensnummer([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequestData req, FunctionContext context)
+        {
+            var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
+
+            var url = GetSisteSekvensnummerUrlForServiceContext(evidenceHarvesterRequest.ServiceContext);
+
+            return await EvidenceSourceResponse.CreateResponse(req, () => GetFregSisteSekvensnummer(evidenceHarvesterRequest, url));
+        }
+
         private async Task<List<EvidenceValue>> GetFregPerson(EvidenceHarvesterRequest req, string url)
         {
             //req.MPToken = req.MPToken ?? GetToken(req.ServiceContext);
@@ -187,6 +218,17 @@ namespace Dan.Plugin.Skatteetaten
 
             var ecb = new EvidenceBuilder(_metadata, "FregHendelsesliste");
             ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result), "Skatteetaten", false);
+
+            return ecb.GetEvidenceValues();
+        }
+
+        private async Task<List<EvidenceValue>> GetFregSisteSekvensnummer(EvidenceHarvesterRequest req, string url)
+        {
+            //the endpoint returns a bare int64 - the most recently persisted sekvensnummer in the feed
+            var result = await Helpers.HarvestFromSke<long>(req, _logger, _client, HttpMethod.Get, url);
+
+            var ecb = new EvidenceBuilder(_metadata, "FregSisteSekvensnummer");
+            ecb.AddEvidenceValue("default", result);
 
             return ecb.GetEvidenceValues();
         }

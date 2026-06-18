@@ -586,6 +586,37 @@ public class Metadata : IEvidenceSourceMetadata
                 },
                 new EvidenceCode()
                 {
+                    EvidenceCodeName = "FregSisteSekvensnummer",
+                    Description = "Siste (sist persisterte) sekvensnummer i hendelseslisten (feed) fra folkeregisteret",
+                    MaxValidDays =  90,
+                    RequiredScopes = "folkeregister:deling/offentligmedhjemmel",
+                    BelongsToServiceContexts = new List<string>
+                    {
+                        ServiceContextOed,
+                        ServiceContextAltinnStudioApps
+                    },
+                    AuthorizationRequirements = new List<Requirement>()
+                    {
+                        new ProvideOwnTokenRequirement(),
+                        new CustomSubjectRequirement()
+                        {
+                            // Allow any string value as subject
+                            SubjectRegex = ".*",
+                            SubjectRegexDescription = "Any string value is allowed"
+                        }
+                    },
+                    Values = new List<EvidenceValue>
+                    {
+                        new EvidenceValue()
+                        {
+                            EvidenceValueName = "default",
+                            ValueType = EvidenceValueType.Number,
+                            Source = SourceTaxDepartment
+                        }
+                    }
+                },
+                new EvidenceCode()
+                {
                     EvidenceCodeName = "A3Test",
                     Description = "Return the arrears for the subject company - new format",
                     MaxValidDays =  90,
