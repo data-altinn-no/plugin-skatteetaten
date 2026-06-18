@@ -54,7 +54,7 @@ namespace Dan.Plugin.Skatteetaten.Test
             var ec = GetFregSisteSekvensnummer();
 
             var value = ec.Values.Should().ContainSingle().Subject;
-            value.EvidenceValueName.Should().Be("default");
+            value.EvidenceValueName.Should().Be("sekvensnummer");
             value.ValueType.Should().Be(EvidenceValueType.Number);
         }
     }
