@@ -3,6 +3,7 @@ using Dan.Common.Interfaces;
 using Dan.Common.Models;
 using Dan.Plugin.Skatteetaten.Models;
 using Dan.Plugin.Skatteetaten.Models.Dtos;
+using Dan.Plugin.Skatteetaten.Models.OppdragUtenlandskeVirksomheter;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Collections.Generic;
@@ -75,40 +76,11 @@ public class Metadata : IEvidenceSourceMetadata
                     {
                         new EvidenceValue()
                         {
-                            EvidenceValueName = "organisasjonsnavn",
-                            ValueType = EvidenceValueType.String,
-                            Source = SourceTaxDepartment
-                        },
-                         new EvidenceValue()
-                        {
-                            EvidenceValueName = "organisasjonsnummer",
-                            ValueType = EvidenceValueType.String,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "antallAktiveOppdragSomArbeidsgiver",
-                            ValueType = EvidenceValueType.Number,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "antallAktiveArbeidstakere",
-                            ValueType = EvidenceValueType.Number,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "antallRegistrerteOppdragSomOppdragsgiver",
-                            ValueType = EvidenceValueType.Number,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "levert",
-                            ValueType = EvidenceValueType.DateTime,
-                            Source = SourceTaxDepartment
-                        },
+                            EvidenceValueName = "default",
+                            ValueType = EvidenceValueType.JsonSchema,
+                            Source = SourceTaxDepartment,
+                            JsonSchemaDefintion = JsonSchema.FromType<OppdragUtenlandskeVirksomheterDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                        }
                     }
                 },
                 new EvidenceCode()
