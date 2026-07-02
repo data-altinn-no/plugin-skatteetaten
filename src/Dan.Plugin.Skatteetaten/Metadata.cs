@@ -205,22 +205,10 @@ public class Metadata : IEvidenceSourceMetadata
                     {
                         new EvidenceValue()
                         {
-                            EvidenceValueName = "levert",
-                            ValueType = EvidenceValueType.DateTime,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "forespurteOrganisasjon",
-                            ValueType = EvidenceValueType.String,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "mvaAlminneligNaering",
+                            EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<MvaAlminneligNaering>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = JsonSchema.FromType<MvaMeldingsOpplysningDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },
