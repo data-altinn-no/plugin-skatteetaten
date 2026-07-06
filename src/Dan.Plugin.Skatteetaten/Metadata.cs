@@ -319,7 +319,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion =  ""
+                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
@@ -379,7 +379,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion =  ""
+                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
@@ -399,7 +399,7 @@ public class Metadata : IEvidenceSourceMetadata
                     MaxValidDays =  90,
                     RequiredScopes = "folkeregister:deling/offentligutenhjemmel",
                     BelongsToServiceContexts = new List<string>
-                    {                        
+                    {
                         ServiceContextAltinnStudioApps
                     },
                     AuthorizationRequirements = new List<Requirement>()
@@ -411,8 +411,8 @@ public class Metadata : IEvidenceSourceMetadata
                                 new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
                                     AccreditationPartyTypes.Subject, PartyTypeConstraint.PrivatePerson)
                             }
-                        },                      
-                        new ProvideOwnTokenRequirement(),                       
+                        },
+                        new ProvideOwnTokenRequirement(),
                         new MaskinportenScopeRequirement()
                         {
                             RequiredScopes = new List<string>() { "dan:altinnstudioapps" },
@@ -426,7 +426,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion =  ""
+                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()

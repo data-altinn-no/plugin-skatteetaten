@@ -5,6 +5,7 @@ using Dan.Common.Models;
 using Dan.Common.Util;
 using Dan.Plugin.Skatteetaten.Config;
 using Dan.Plugin.Skatteetaten.Models;
+using Dan.Plugin.Skatteetaten.Models.Dtos;
 using Dan.Plugin.Skatteetaten.Utilities;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -190,9 +191,7 @@ namespace Dan.Plugin.Skatteetaten
 
         private async Task<List<EvidenceValue>> GetFregPerson(EvidenceHarvesterRequest req, string url)
         {
-            //req.MPToken = req.MPToken ?? GetToken(req.ServiceContext);
-
-            var result = await Helpers.HarvestFromSke(req, _logger, _client, HttpMethod.Get, url);
+            var result = await Helpers.HarvestFromSke<FregPersonDto>(req, _logger, _client, HttpMethod.Get, url);
 
             var ecb = new EvidenceBuilder(_metadata, "FregPerson");
             ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result), "Skatteetaten", false);
@@ -202,9 +201,7 @@ namespace Dan.Plugin.Skatteetaten
 
         private async Task<List<EvidenceValue>> GetFregPersonRelasjonUtvidet(EvidenceHarvesterRequest req, string url)
         {
-            //req.MPToken = req.MPToken ?? GetToken(req.ServiceContext);
-
-            var result = await Helpers.HarvestFromSke(req, _logger, _client, HttpMethod.Get, url);
+            var result = await Helpers.HarvestFromSke<FregPersonDto>(req, _logger, _client, HttpMethod.Get, url);
 
             var ecb = new EvidenceBuilder(_metadata, "FregPersonRelasjonUtvidet");
             ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result), "Skatteetaten", false);
