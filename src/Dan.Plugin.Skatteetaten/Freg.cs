@@ -189,12 +189,17 @@ namespace Dan.Plugin.Skatteetaten
             return await EvidenceSourceResponse.CreateResponse(req, () => GetFregSisteSekvensnummer(evidenceHarvesterRequest, url));
         }
 
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
         private async Task<List<EvidenceValue>> GetFregPerson(EvidenceHarvesterRequest req, string url)
         {
             var result = await Helpers.HarvestFromSke<FregPersonDto>(req, _logger, _client, HttpMethod.Get, url);
 
             var ecb = new EvidenceBuilder(_metadata, "FregPerson");
-            ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result), "Skatteetaten", false);
+            ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result, _jsonSettings), "Skatteetaten", false);
 
             return ecb.GetEvidenceValues();
         }
@@ -204,7 +209,7 @@ namespace Dan.Plugin.Skatteetaten
             var result = await Helpers.HarvestFromSke<FregPersonDto>(req, _logger, _client, HttpMethod.Get, url);
 
             var ecb = new EvidenceBuilder(_metadata, "FregPersonRelasjonUtvidet");
-            ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result), "Skatteetaten", false);
+            ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(result, _jsonSettings), "Skatteetaten", false);
 
             return ecb.GetEvidenceValues();
         }
