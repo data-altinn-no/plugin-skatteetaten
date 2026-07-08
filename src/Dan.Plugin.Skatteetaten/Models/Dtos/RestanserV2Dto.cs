@@ -11,7 +11,7 @@ public class RestanserV2Dto
     {
         Levert = model.levert;
         ForespurteOrganisasjon = model.forespurteOrganisasjon;
-        Restanser = new RestanserDto(model.restanser);
+        Restanser = model.restanser != null ? new RestanserDto(model.restanser) : null;
     }
 
     [JsonProperty("levert")]
@@ -29,12 +29,12 @@ public class RestanserDto
 {
     public RestanserDto(Restanser restanser)
     {
-        Arbeidsgiveravgift = new RestanserKategoriDto(restanser.arbeidsgiveravgift);
-        Forskuddstrekk = new RestanserKategoriDto(restanser.forskuddstrekk);
-        Forskuddsskatt = new RestanserKategoriDto(restanser.forskuddsskatt);
-        Restskatt = new RestanserKategoriDto(restanser.restskatt);
-        Gebyr = new RestanserKategoriDto(restanser.gebyr);
-        Merverdiavgift = new RestanserKategoriDto(restanser.merverdiavgift);
+        Arbeidsgiveravgift = restanser.arbeidsgiveravgift != null ? new RestanserKategoriDto(restanser.arbeidsgiveravgift) : null;
+        Forskuddstrekk = restanser.forskuddstrekk != null ? new RestanserKategoriDto(restanser.forskuddstrekk) : null;
+        Forskuddsskatt = restanser.forskuddsskatt != null ? new RestanserKategoriDto(restanser.forskuddsskatt) : null;
+        Restskatt = restanser.restskatt != null ? new RestanserKategoriDto(restanser.restskatt) : null;
+        Gebyr = restanser.gebyr != null ? new RestanserKategoriDto(restanser.gebyr) : null;
+        Merverdiavgift = restanser.merverdiavgift != null ? new RestanserKategoriDto(restanser.merverdiavgift) : null;
     }
 
     [JsonProperty("arbeidsgiveravgift")]

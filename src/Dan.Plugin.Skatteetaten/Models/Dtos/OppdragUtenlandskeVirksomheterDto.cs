@@ -10,7 +10,7 @@ public class OppdragUtenlandskeVirksomheterDto
     public OppdragUtenlandskeVirksomheterDto(OppdragUtenlandskeVirksomheterModel model)
     {
         ForespurteOrganisasjon = model.forespurteOrganisasjon;
-        Oppdrag = new OppdragAntallDto(model.oppdrag);
+        Oppdrag = model.oppdrag != null ? new OppdragAntallDto(model.oppdrag) : null;
     }
 
     [JsonProperty("forespurteOrganisasjon")]

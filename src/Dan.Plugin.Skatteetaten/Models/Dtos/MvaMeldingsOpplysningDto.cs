@@ -12,7 +12,7 @@ public class MvaMeldingsOpplysningDto
     {
         Levert = model.levert;
         ForespurteOrganisasjon = model.forespurteOrganisasjon;
-        MvaAlminneligNaering = new MvaAlminneligNaeringDto(model.mvaAlminneligNaering);
+        MvaAlminneligNaering = model.mvaAlminneligNaering != null ? new MvaAlminneligNaeringDto(model.mvaAlminneligNaering) : null;
     }
 
     [JsonProperty("levert")]
