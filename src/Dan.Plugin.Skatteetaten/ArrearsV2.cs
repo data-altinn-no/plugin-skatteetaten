@@ -2,12 +2,15 @@ using Dan.Common.Interfaces;
 using Dan.Common.Models;
 using Dan.Common.Util;
 using Dan.Plugin.Skatteetaten.Config;
+using Dan.Plugin.Skatteetaten.Models;
+using Dan.Plugin.Skatteetaten.Models.Arrears;
+using Dan.Plugin.Skatteetaten.Models.Dtos;
 using Dan.Plugin.Skatteetaten.Utilities;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -37,73 +40,18 @@ namespace Dan.Plugin.Skatteetaten
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, FunctionContext context)
         {
             var evidenceHarvesterRequest = await req.ReadFromJsonAsync<EvidenceHarvesterRequest>();
-            return await EvidenceSourceResponse.CreateResponse(req, ()=> GetArrearsFromSkeAsync(evidenceHarvesterRequest));
+            return await EvidenceSourceResponse.CreateResponse(req, () => GetArrearsFromSkeAsync(evidenceHarvesterRequest));
         }
 
         private async Task<List<EvidenceValue>> GetArrearsFromSkeAsync(EvidenceHarvesterRequest evidenceHarvesterRequest)
         {
             var url = $"{_settings.RestanserEndpoint}/v2/ebevis/{evidenceHarvesterRequest.OrganizationNumber}";
-            dynamic result = await Helpers.HarvestFromSke(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url, _settings);
+            var result = await Helpers.HarvestFromSke<ArrearsModel>(evidenceHarvesterRequest, _logger, _client, HttpMethod.Get, url, _settings);
 
-            string orgNo = "";
-            DateTime? delivered = null;
-            string AGA = "";
-            string withholdingDueAndUnpaid = "";
-            string preemptiveTaxUnpaid = "";
-            string remainingTaxes = "";
-            string remainingAdditionalCharges = "";
-            string VAT = "";
-
-            if (result["levert"] != null)
-            {
-                delivered = result["levert"];
-            }
-
-            if (result["forespurteOrganisasjon"] != null)
-            {
-                orgNo = result["forespurteOrganisasjon"];
-            }
-
-            if (result["restanser"]["arbeidsgiveravgift"]["forfaltOgUbetalt"] != null)
-            {
-                AGA = result["restanser"]["arbeidsgiveravgift"]["forfaltOgUbetalt"] + " NOK";
-            }
-
-            if (result["restanser"]["forskuddstrekk"]["forfaltOgUbetalt"] != null)
-            {
-                withholdingDueAndUnpaid = result["restanser"]["forskuddstrekk"]["forfaltOgUbetalt"] + " NOK";
-            }
-
-            if (result["restanser"]["forskuddsskatt"]["forfaltOgUbetalt"] != null)
-            {
-                preemptiveTaxUnpaid = result["restanser"]["forskuddsskatt"]["forfaltOgUbetalt"] + " NOK";
-            }
-
-            if (result["restanser"]["restskatt"]["forfaltOgUbetalt"] != null)
-            {
-                remainingTaxes = result["restanser"]["restskatt"]["forfaltOgUbetalt"] + " NOK";
-            }
-
-            if (result["restanser"]["gebyr"]["forfaltOgUbetalt"] != null)
-            {
-                remainingAdditionalCharges = result["restanser"]["gebyr"]["forfaltOgUbetalt"] + " NOK";
-            }
-
-            if (result["restanser"]["merverdiavgift"]["forfaltOgUbetalt"] != null)
-            {
-                VAT = result["restanser"]["merverdiavgift"]["forfaltOgUbetalt"] + " NOK";
-            }
+            var dto = new RestanserV2Dto(result);
 
             var ecb = new EvidenceBuilder(_evidenceSourceMetadata, "RestanserV2");
-
-            ecb.AddEvidenceValue($"levert", delivered);
-            ecb.AddEvidenceValue($"forespurteOrganisasjon", orgNo);
-            ecb.AddEvidenceValue($"arbeidsgiveravgiftForfaltOgUbetalt", AGA);
-            ecb.AddEvidenceValue($"forskuddstrekkForfaltOgUbetalt", withholdingDueAndUnpaid);
-            ecb.AddEvidenceValue($"forskuddsskattForfaltOgUbetalt", preemptiveTaxUnpaid);
-            ecb.AddEvidenceValue($"restskattForfaltOgUbetalt", remainingTaxes);
-            ecb.AddEvidenceValue($"gebyrForfaltOgUbetalt", remainingAdditionalCharges);
-            ecb.AddEvidenceValue($"merverdiavgiftForfaltOgUbetalt", VAT);
+            ecb.AddEvidenceValue("default", JsonConvert.SerializeObject(dto), Constants.Source, false);
             return ecb.GetEvidenceValues();
         }
     }

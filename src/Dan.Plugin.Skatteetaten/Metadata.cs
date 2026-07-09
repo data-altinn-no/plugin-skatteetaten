@@ -1,9 +1,9 @@
 using Dan.Common.Enums;
 using Dan.Common.Interfaces;
 using Dan.Common.Models;
-using Dan.Plugin.Skatteetaten;
 using Dan.Plugin.Skatteetaten.Models;
-using Dan.Plugin.Skatteetaten.Models.Arbeidsgiveravgift;
+using Dan.Plugin.Skatteetaten.Models.Dtos;
+using Dan.Plugin.Skatteetaten.Models.OppdragUtenlandskeVirksomheter;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Collections.Generic;
@@ -76,40 +76,11 @@ public class Metadata : IEvidenceSourceMetadata
                     {
                         new EvidenceValue()
                         {
-                            EvidenceValueName = "organisasjonsnavn",
-                            ValueType = EvidenceValueType.String,
-                            Source = SourceTaxDepartment
-                        },
-                         new EvidenceValue()
-                        {
-                            EvidenceValueName = "organisasjonsnummer",
-                            ValueType = EvidenceValueType.String,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "antallAktiveOppdragSomArbeidsgiver",
-                            ValueType = EvidenceValueType.Number,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "antallAktiveArbeidstakere",
-                            ValueType = EvidenceValueType.Number,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "antallRegistrerteOppdragSomOppdragsgiver",
-                            ValueType = EvidenceValueType.Number,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "levert",
-                            ValueType = EvidenceValueType.DateTime,
-                            Source = SourceTaxDepartment
-                        },
+                            EvidenceValueName = "default",
+                            ValueType = EvidenceValueType.JsonSchema,
+                            Source = SourceTaxDepartment,
+                            JsonSchemaDefintion = JsonSchema.FromType<OppdragUtenlandskeVirksomheterDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                        }
                     }
                 },
                 new EvidenceCode()
@@ -144,55 +115,10 @@ public class Metadata : IEvidenceSourceMetadata
                     {
                         new EvidenceValue()
                         {
-                            EvidenceValueName = "levert",
-                            ValueType = EvidenceValueType.DateTime,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "forespurteOrganisasjon",
-                            ValueType = EvidenceValueType.String,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "arbeidsgiveravgiftForfaltOgUbetalt",
-                            ValueType = EvidenceValueType.Amount,
-                            Source = SourceTaxDepartment
-                        },
-
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "forskuddstrekkForfaltOgUbetalt",
-                            ValueType = EvidenceValueType.Amount,
-                            Source = SourceTaxDepartment
-                        },
-
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "forskuddsskattForfaltOgUbetalt",
-                            ValueType = EvidenceValueType.Amount,
-                            Source = SourceTaxDepartment
-                        },
-
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "restskattForfaltOgUbetalt",
-                            ValueType = EvidenceValueType.Amount,
-                            Source = SourceTaxDepartment
-                        },
-
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "gebyrForfaltOgUbetalt",
-                            ValueType = EvidenceValueType.Amount,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "merverdiavgiftForfaltOgUbetalt",
-                            ValueType = EvidenceValueType.Amount,
-                            Source = SourceTaxDepartment
+                            EvidenceValueName = "default",
+                            ValueType = EvidenceValueType.JsonSchema,
+                            Source = SourceTaxDepartment,
+                            JsonSchemaDefintion = JsonSchema.FromType<RestanserV2Dto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },      
@@ -234,22 +160,10 @@ public class Metadata : IEvidenceSourceMetadata
                     {
                         new EvidenceValue()
                         {
-                            EvidenceValueName = "levert",
-                            ValueType = EvidenceValueType.DateTime,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "forespurteOrganisasjon",
-                            ValueType = EvidenceValueType.String,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "arbeidsgiveravgifter",
+                            EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
-                            JsonSchemaDefintion = JsonSchema.FromType<PayrollTaxModel>().ToJson(Newtonsoft.Json.Formatting.Indented),
-                            Source = SourceTaxDepartment
+                            Source = SourceTaxDepartment,
+                            JsonSchemaDefintion = JsonSchema.FromType<ArbeidsgiveravgiftDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },
@@ -291,22 +205,10 @@ public class Metadata : IEvidenceSourceMetadata
                     {
                         new EvidenceValue()
                         {
-                            EvidenceValueName = "levert",
-                            ValueType = EvidenceValueType.DateTime,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "forespurteOrganisasjon",
-                            ValueType = EvidenceValueType.String,
-                            Source = SourceTaxDepartment
-                        },
-                        new EvidenceValue()
-                        {
-                            EvidenceValueName = "mvaAlminneligNaering",
+                            EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<MvaAlminneligNaering>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = JsonSchema.FromType<MvaMeldingsOpplysningDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },
@@ -417,7 +319,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion =  ""
+                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
@@ -477,7 +379,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion =  ""
+                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
@@ -497,7 +399,7 @@ public class Metadata : IEvidenceSourceMetadata
                     MaxValidDays =  90,
                     RequiredScopes = "folkeregister:deling/offentligutenhjemmel",
                     BelongsToServiceContexts = new List<string>
-                    {                        
+                    {
                         ServiceContextAltinnStudioApps
                     },
                     AuthorizationRequirements = new List<Requirement>()
@@ -509,8 +411,8 @@ public class Metadata : IEvidenceSourceMetadata
                                 new KeyValuePair<AccreditationPartyTypes, PartyTypeConstraint>(
                                     AccreditationPartyTypes.Subject, PartyTypeConstraint.PrivatePerson)
                             }
-                        },                      
-                        new ProvideOwnTokenRequirement(),                       
+                        },
+                        new ProvideOwnTokenRequirement(),
                         new MaskinportenScopeRequirement()
                         {
                             RequiredScopes = new List<string>() { "dan:altinnstudioapps" },
@@ -524,7 +426,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion =  ""
+                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
