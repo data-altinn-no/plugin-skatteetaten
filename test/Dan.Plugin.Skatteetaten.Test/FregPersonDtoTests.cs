@@ -98,15 +98,6 @@ public class FregPersonDtoTests
                     "kilde":  "Synutopia",
                     "statsborgerskap":  "NOR"
                 }
-            ],
-            "status": [
-                {
-                    "ajourholdstidspunkt":  "2020-12-22T17:09:53.4+01:00",
-                    "erGjeldende":  true,
-                    "gyldighetstidspunkt":  "2020-12-22T17:09:53.4+01:00",
-                    "kilde":  "KILDE_DSF",
-                    "status":  "bosatt"
-                }
             ]
         }
         """;
