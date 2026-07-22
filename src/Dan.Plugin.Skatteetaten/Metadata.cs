@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Constants = Dan.Common.Constants;
-using JsonSchema = NJsonSchema.JsonSchema;
 namespace Dan.Plugin.DATASOURCENAME;
 
 /// <summary>
@@ -79,7 +78,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<OppdragUtenlandskeVirksomheterDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<OppdragUtenlandskeVirksomheterDto>(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },
@@ -118,7 +117,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<RestanserV2Dto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<RestanserV2Dto>(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },      
@@ -163,7 +162,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<ArbeidsgiveravgiftDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<ArbeidsgiveravgiftDto>(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },
@@ -208,7 +207,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<MvaMeldingsOpplysningDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<MvaMeldingsOpplysningDto>(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },
@@ -319,7 +318,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<FregPersonDto>(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
@@ -379,7 +378,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<FregPersonDto>(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
@@ -426,7 +425,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<FregPersonDto>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<FregPersonDto>(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
@@ -473,7 +472,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<List<FregHendelseslisteElement>>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<List<FregHendelseslisteElement>>(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
