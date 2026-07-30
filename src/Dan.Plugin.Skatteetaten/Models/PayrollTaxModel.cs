@@ -1,24 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Dan.Plugin.Skatteetaten.Models.Arbeidsgiveravgift
 {
-    public class ArbeidsgiveravgiftEntry
+    public class Arbeidsgiveravgift
     {
         public string termin { get; set; }
         public string aar { get; set; }
-        public long sumavgiftsgrunnlagBeloep { get; set; }
-    }
-
-    public class ArbeidsgiveravgiftWrapper
-    {
-        public ArbeidsgiveravgiftEntry arbeidsgiveravgift { get; set; }
+        public int sumavgiftsgrunnlagBeloep { get; set; }
     }
 
     public class PayrollTaxModel
     {
         public DateTime levert { get; set; }
         public string forespurteOrganisasjon { get; set; }
-        public List<ArbeidsgiveravgiftWrapper> arbeidsgiveravgifter { get; set; }
+        public List<Arbeidsgiveravgift> arbeidsgiveravgifter { get; set; }
     }
+
+
 }
