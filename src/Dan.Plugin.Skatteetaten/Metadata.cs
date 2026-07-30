@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Constants = Dan.Common.Constants;
-using JsonSchema = NJsonSchema.JsonSchema;
 namespace Dan.Plugin.DATASOURCENAME;
 
 /// <summary>
@@ -571,7 +570,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "default",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<List<FregHendelseslisteElement>>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<List<FregHendelseslisteElement>>(Newtonsoft.Json.Formatting.Indented)
                         }
                     },
                     Parameters = new List<EvidenceParameter>()
