@@ -6,6 +6,7 @@ using Dan.Plugin.Skatteetaten.Models;
 using Dan.Plugin.Skatteetaten.Models.Arbeidsgiveravgift;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Newtonsoft.Json.Schema;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -247,7 +248,7 @@ public class Metadata : IEvidenceSourceMetadata
                         {
                             EvidenceValueName = "arbeidsgiveravgifter",
                             ValueType = EvidenceValueType.JsonSchema,
-                            JsonSchemaDefintion = JsonSchema.FromType<PayrollTaxModel>().ToJson(Newtonsoft.Json.Formatting.Indented),
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<PayrollTaxModel>(Newtonsoft.Json.Formatting.Indented),
                             Source = SourceTaxDepartment
                         }
                     }
@@ -305,7 +306,7 @@ public class Metadata : IEvidenceSourceMetadata
                             EvidenceValueName = "mvaAlminneligNaering",
                             ValueType = EvidenceValueType.JsonSchema,
                             Source = SourceTaxDepartment,
-                            JsonSchemaDefintion = JsonSchema.FromType<MvaAlminneligNaering>().ToJson(Newtonsoft.Json.Formatting.Indented)
+                            JsonSchemaDefintion = EvidenceValue.SchemaFromObject<MvaAlminneligNaering>(Newtonsoft.Json.Formatting.Indented)
                         }
                     }
                 },
