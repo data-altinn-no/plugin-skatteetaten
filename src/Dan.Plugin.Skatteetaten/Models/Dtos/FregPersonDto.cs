@@ -263,6 +263,14 @@ public class FregUtenlandskAdresseDto
     public string Region { get; set; }
 }
 
+// Wrapper for originaltNavn
+[Serializable]
+public class OriginaltNavnDto
+{
+    [JsonProperty("navn")]
+    public FregPersonnavnDto Navn { get; set; }
+}
+
 // Person without folkeregister identifier — two variants (one uses "navn", one uses "personnavn")
 [Serializable]
 public class FregPersonUtenIdNavnDto
@@ -1070,7 +1078,7 @@ public class NavnDto
     public DateTimeOffset? Opphoerstidspunkt { get; set; }
 
     [JsonProperty("originaltNavn")]
-    public FregPersonnavnDto OriginaltNavn { get; set; }
+    public OriginaltNavnDto OriginaltNavn { get; set; }
 }
 
 // ── Part: opphold ─────────────────────────────────────────────────────────────
@@ -1600,7 +1608,7 @@ public class VergeDto
     public FregPersonnavnDto Navn { get; set; }
 
     [JsonProperty("navnFoedselsdato")]
-    public FregPersonUtenIdPersonnavnDto NavnFoedselsdato { get; set; }
+    public FregPersonUtenIdNavnDto NavnFoedselsdato { get; set; }
 
     [JsonProperty("omfang")]
     public string Omfang { get; set; }
