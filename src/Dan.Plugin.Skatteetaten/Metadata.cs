@@ -6,7 +6,6 @@ using Dan.Plugin.Skatteetaten.Models;
 using Dan.Plugin.Skatteetaten.Models.Arbeidsgiveravgift;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Newtonsoft.Json.Schema;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
