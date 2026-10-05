@@ -1,10 +1,10 @@
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using Dan.Common.Extensions;
 using Dan.Plugin.Skatteetaten.Config;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Dan.Plugin.Skatteetaten
 {
@@ -23,9 +23,6 @@ namespace Dan.Plugin.Skatteetaten
                 {
                     // Add any additional services here
                     services.AddLogging();
-
-                    // See https://docs.microsoft.com/en-us/azure/azure-monitor/app/worker-service#using-application-insights-sdk-for-worker-services
-                    services.AddApplicationInsightsTelemetryWorkerService();
 
                     // This makes IOption<Settings> available in the DI container.
                     services.AddOptions<ApplicationSettings>()
