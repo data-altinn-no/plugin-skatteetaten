@@ -16,6 +16,12 @@ namespace Dan.Plugin.Skatteetaten
         private static Task Main(string[] args)
         {
             var host = new HostBuilder()
+                .ConfigureServices(services =>
+                {
+                    // Mask national identity numbers in outgoing HTTP dependency spans. This is registered before
+                    // ConfigureDanPluginDefaults so the processor runs ahead of the Azure Monitor export processor.
+                    services.ConfigureOpenTelemetryTracerProvider(builder => builder.AddProcessor<SsnRedactingProcessor>());
+                })
                 .ConfigureDanPluginDefaults()
                 .ConfigureAppConfiguration((context, configuration) =>
                 {
@@ -37,9 +43,6 @@ namespace Dan.Plugin.Skatteetaten
                     services.AddOptions<ApplicationSettings>()
                         .Configure<IConfiguration>((settings, configuration) => configuration.Bind(settings));
                     var applicationSettings = services.BuildServiceProvider().GetRequiredService<IOptions<ApplicationSettings>>().Value;
-
-                    // Mask national identity numbers in outgoing HTTP dependency spans before they are exported to Azure Monitor.
-                    services.ConfigureOpenTelemetryTracerProvider(builder => builder.AddProcessor<SsnRedactingProcessor>());
                 })
                 .Build();
 
