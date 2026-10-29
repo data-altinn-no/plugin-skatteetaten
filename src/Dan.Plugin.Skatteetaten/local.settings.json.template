@@ -15,15 +15,12 @@
     "OppdragUtenlandskeVirksomheterEndpoint": "https://oppdragutenlandskevirksomheter.api.skatteetaten-test.no",
     "ArbeidsgiveravgiftEndpoint": "https://arbeidsgiveravgift.api.skatteetaten-test.no",
     "MvaMeldingsOpplysningEndpoint": "https://mvameldingsopplysning.api.skatteetaten-test.no",
-    "KeyVaultName": "",
-    "KeyVaultSslCertificate": "",
     "FregEnvironment": "",
     "Breaker_HalfOpenWaitTime_ms": 10000, // 10s
     "Breaker_FailureCountThreshold": 1000000,
     "Breaker_SuccessCountThreshold": 0,
     "Breaker_RetryCount": 0,
     "Breaker_RetryWaitTime_ms": 50,
-    "RedisCache": "localhost,allowAdmin=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
   },
   "ConnectionStrings": {
