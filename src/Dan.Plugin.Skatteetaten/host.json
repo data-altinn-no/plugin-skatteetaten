@@ -9,12 +9,14 @@
 	"logging": {
 		"logLevel": {
 			"default": "Information",
-			"Microsoft": "Warning"
+			"Microsoft": "Warning",
+			"System.Net.Http.HttpClient": "Warning"
 		},
 		"OpenTelemetry": {
 			"logLevel": {
 				"default": "Information",
-				"Microsoft": "Warning"
+				"Microsoft": "Warning",
+				"System.Net.Http.HttpClient": "Warning"
 			}
 		}
 	}
